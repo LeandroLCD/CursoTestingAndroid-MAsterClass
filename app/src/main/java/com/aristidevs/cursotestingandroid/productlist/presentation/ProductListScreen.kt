@@ -24,10 +24,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aristidevs.cursotestingandroid.R
 import com.aristidevs.cursotestingandroid.cart.presentation.CartUiState
 import com.aristidevs.cursotestingandroid.cart.presentation.CartViewModel
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductWithPromotion
@@ -101,7 +102,7 @@ fun ProductListScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        "ERROR",
+                        stringResource(R.string.error),
                         style = MaterialTheme.typography.headlineMedium,
                         color = MaterialTheme.colorScheme.error
                     )
@@ -131,7 +132,7 @@ fun ProductListScreen(
                     }
 
                     Text(
-                        "${state.products.size} productos",
+                        stringResource(R.string.products, state.products.size),
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.secondary
@@ -149,7 +150,7 @@ fun ProductListScreen(
                             ) {
                                 Text("🔍", style = MaterialTheme.typography.displayMedium)
                                 Text(
-                                    "No se encontraron productos",
+                                    stringResource(R.string.products_not_found),
                                     style = MaterialTheme.typography.titleLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )

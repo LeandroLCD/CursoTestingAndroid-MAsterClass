@@ -8,7 +8,7 @@ import com.aristidevs.cursotestingandroid.productlist.domain.model.Product
 fun AddToCartButton(modifier: Modifier = Modifier, product: Product?, isLoading: Boolean,  addToCart: () -> Unit) {
     product?.let {
         if(it.stock > 0 ){
-            AddToCartButtonWithStock(modifier, it, isLoading, addToCart)
+            AddToCartButtonWithStock(modifier, isLoading, addToCart)
         }else{
             AddToCartButtonNoStock(modifier)
         }

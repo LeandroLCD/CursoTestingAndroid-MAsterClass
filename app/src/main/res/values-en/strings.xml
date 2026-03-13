@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CursoTestingAndroid</string>
+    <string name="products">%1$d products</string>
+    <string name="products_not_found">No products found</string>
+    <string name="detail_insufficient_stock_error">Not enough stock</string>
+    <string name="detail_network_error">No internet, check your connection</string>
+    <string name="detail_unknown_error">Unexpected error, please try again</string>
+    <string name="detail_success_add_to_cart">Product added</string>
+    <string name="detail_percent_off">%1$d%% OFF</string>
+    <string name="detail_promo_label">PROMO: %1$s</string>
+    <string name="detail_stock_available">Stock available</string>
+    <string name="detail_stock_units">%1$d units</string>
+    <string name="detail_out_of_stock">Out of stock</string>
+    <string name="detail_button_out_of_stock">Out of stock</string>
+    <string name="detail_button_add_to_cart">Add to cart</string>
+    <string name="error">ERROR</string>
+    <string name="setting">Settings</string>
+    <string name="filter_and_visualization">Filters and display</string>
+    <string name="settings_in_stock_only_title">In stock products only</string>
+    <string name="settings_in_stock_only_description">Show only available products</string>
+    <string name="settings_show_taxes_title">Show taxes included</string>
+    <string name="settings_show_taxes_description">Include taxes in displayed prices</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_theme_title">App theme</string>
+    <string name="settings_theme_description">Choose between light, dark or follow system</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+</resources>
+

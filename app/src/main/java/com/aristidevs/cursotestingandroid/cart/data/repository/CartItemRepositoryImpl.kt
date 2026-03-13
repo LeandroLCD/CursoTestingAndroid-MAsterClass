@@ -6,9 +6,7 @@ import com.aristidevs.cursotestingandroid.cart.domain.model.CartItem
 import com.aristidevs.cursotestingandroid.cart.domain.repository.CartItemRepository
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError
 import com.aristidevs.cursotestingandroid.productlist.data.local.LocalDataSource
-import com.aristidevs.cursotestingandroid.productlist.data.mappers.toDomain
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 

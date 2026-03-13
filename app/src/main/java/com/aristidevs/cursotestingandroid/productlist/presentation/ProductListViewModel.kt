@@ -9,7 +9,6 @@ import com.aristidevs.cursotestingandroid.productlist.domain.repository.Settings
 import com.aristidevs.cursotestingandroid.productlist.domain.usecase.GetProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,11 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
-    private val getProductsUseCase: GetProductsUseCase,
+    getProductsUseCase: GetProductsUseCase,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<ProductListUiState>(ProductListUiState.Loading)
     val uiState = combine(
         getProductsUseCase(),
         settingsRepository.selectedCategory,

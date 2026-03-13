@@ -3,8 +3,12 @@ package com.aristidevs.cursotestingandroid.detail.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aristidevs.cursotestingandroid.cart.domain.usecase.AddToCartUseCase
-import com.aristidevs.cursotestingandroid.core.domain.model.AppError.*
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError
+import com.aristidevs.cursotestingandroid.core.domain.model.AppError.DatabaseError
+import com.aristidevs.cursotestingandroid.core.domain.model.AppError.NetworkError
+import com.aristidevs.cursotestingandroid.core.domain.model.AppError.NotFoundError
+import com.aristidevs.cursotestingandroid.core.domain.model.AppError.UnknownError
+import com.aristidevs.cursotestingandroid.core.domain.model.AppError.Validation
 import com.aristidevs.cursotestingandroid.detail.domain.usecase.GetProductDetailWithPromotionUseCase
 import com.aristidevs.cursotestingandroid.detail.presentation.ProductDetailEvent.SUCCESS_ADD_TO_CART
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,7 +71,8 @@ class ProductDetailViewModel @Inject constructor(
         val newEvent = when (e) {
             NetworkError() -> ProductDetailEvent.NETWORK_ERROR
             is Validation.InsufficientStock -> ProductDetailEvent.INSUFFICIENT_STOCK_ERROR
-            is UnknownError, DatabaseError, NotFoundError, Validation.QuantityMustBePositive -> ProductDetailEvent.UNKNOWN_ERROR
+            is UnknownError, is DatabaseError, is NotFoundError, is Validation.QuantityMustBePositive -> ProductDetailEvent.UNKNOWN_ERROR
+            else -> ProductDetailEvent.UNKNOWN_ERROR
         }
         _events.emit(newEvent)
     }

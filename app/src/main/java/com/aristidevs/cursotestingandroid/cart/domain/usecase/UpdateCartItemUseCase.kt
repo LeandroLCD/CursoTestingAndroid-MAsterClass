@@ -14,7 +14,7 @@ class UpdateCartItemUseCase @Inject constructor(
     suspend operator fun invoke(productId: String, quantity: Int) {
 
         if (quantity < 0) {
-            throw AppError.Validation.QuantityMustBePositive
+            throw AppError.Validation.QuantityMustBePositive()
         }
 
         if (quantity == 0) {
@@ -23,7 +23,7 @@ class UpdateCartItemUseCase @Inject constructor(
         }
 
         val product = productRepository.getProductById(productId).first()
-            ?: throw AppError.NotFoundError
+            ?: throw AppError.NotFoundError()
 
         if (quantity > product.stock){
             throw AppError.Validation.InsufficientStock(product.stock)

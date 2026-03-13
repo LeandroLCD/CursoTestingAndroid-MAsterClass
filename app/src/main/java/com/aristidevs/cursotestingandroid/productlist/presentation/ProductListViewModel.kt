@@ -2,27 +2,20 @@ package com.aristidevs.cursotestingandroid.productlist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aristidevs.cursotestingandroid.productlist.domain.model.Product
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductPromotion
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductWithPromotion
-import com.aristidevs.cursotestingandroid.productlist.domain.model.PromotionType
 import com.aristidevs.cursotestingandroid.productlist.domain.model.SortOption
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.SettingsRepository
 import com.aristidevs.cursotestingandroid.productlist.domain.usecase.GetProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

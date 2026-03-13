@@ -31,12 +31,12 @@ class CartItemRepositoryImpl @Inject constructor(private val localDataSource: Lo
     }
 
     override suspend fun removeFromCart(productId: String) {
-        val item = localDataSource.getCartItemById(productId) ?: throw AppError.NotFoundError
+        val item = localDataSource.getCartItemById(productId) ?: throw AppError.NotFoundError()
         localDataSource.deleteCartItem(item)
     }
 
     override suspend fun updateQuantity(productId: String, quantity: Int) {
-        val item = localDataSource.getCartItemById(productId) ?: throw AppError.NotFoundError
+        val item = localDataSource.getCartItemById(productId) ?: throw AppError.NotFoundError()
         localDataSource.updateCartItem(item.copy(quantity = quantity))
     }
 

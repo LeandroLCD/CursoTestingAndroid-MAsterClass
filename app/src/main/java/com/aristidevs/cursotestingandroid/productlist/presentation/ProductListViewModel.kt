@@ -33,64 +33,29 @@ class ProductListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ProductListUiState>(ProductListUiState.Loading)
-    val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
+    val uiState = combine(
+        getProductsUseCase(),
+        settingsRepository.selectedCategory,
+        settingsRepository.sortOption
+    ) { products, category, sortOption ->
+        createUiState(products, category, sortOption)
+    }.catch { e: Throwable ->
+        emit(ProductListUiState.Error(e.message.orEmpty()))
+    }.stateIn(
+        scope = viewModelScope,
+        initialValue = ProductListUiState.Loading,
+        started = SharingStarted.WhileSubscribed(5000)
+    )
 
     private val _events = MutableSharedFlow<ProductListEvent>(extraBufferCapacity = 1)
     val events: SharedFlow<ProductListEvent> = _events
 
-    val filterVisible:StateFlow<Boolean> = settingsRepository.filtersVisible.stateIn(
+    val filterVisible: StateFlow<Boolean> = settingsRepository.filtersVisible.stateIn(
         scope = viewModelScope,
         initialValue = true,
         started = SharingStarted.WhileSubscribed(5000)
     )
 
-    private var productsJob: Job? = null
-
-    init {
-        loadProducts()
-    }
-
-    fun loadProducts() {
-        _uiState.value = ProductListUiState.Loading
-        productsJob?.cancel()
-        productsJob = combine(
-            getProductsUseCase(),
-            settingsRepository.selectedCategory,
-            settingsRepository.sortOption
-        ) { products, category, sortOption ->
-            var filteredProducts = products
-
-            if (category != null) {
-                filteredProducts = filteredProducts.filter { it.product.category == category }
-            }
-
-            val sorted = when (sortOption) {
-                SortOption.PRICE_ASC -> filteredProducts.sortedBy { effectivePrice(it) }
-                SortOption.PRICE_DESC -> filteredProducts.sortedByDescending { effectivePrice(it) }
-                SortOption.NONE -> filteredProducts
-                SortOption.DISCOUNT ->
-//                    filteredProducts.sortedByDescending { effectiveDiscountPercent(it) }
-                    filteredProducts.sortedWith(
-                        compareByDescending<ProductWithPromotion> {
-                            effectiveDiscountPercent(it)
-                        }.thenBy { it.promotion == null}
-                    )
-            }
-
-            val categories = products.map { it.product.category }.distinct().sorted()
-
-            ProductListUiState.Success(
-                products = sorted,
-                categories = categories,
-                selectedCategory = category,
-                sortOption = sortOption
-            )
-        }.onEach { state ->
-            _uiState.value = state
-        }.catch { e: Throwable ->
-            _uiState.value = ProductListUiState.Error(e.message.orEmpty())
-        }.launchIn(viewModelScope)
-    }
 
     fun setCategory(category: String?) {
         viewModelScope.launch {
@@ -122,5 +87,39 @@ class ProductListViewModel @Inject constructor(
             is ProductPromotion.Percent -> promo.discountedPrice
             else -> item.product.price
         }
+    }
+
+    private fun createUiState(
+        products: List<ProductWithPromotion>,
+        category: String?,
+        sortOption: SortOption
+    ): ProductListUiState {
+        var filteredProducts = products
+
+        if (category != null) {
+            filteredProducts = filteredProducts.filter { it.product.category == category }
+        }
+
+        val sorted = when (sortOption) {
+            SortOption.PRICE_ASC -> filteredProducts.sortedBy { effectivePrice(it) }
+            SortOption.PRICE_DESC -> filteredProducts.sortedByDescending { effectivePrice(it) }
+            SortOption.NONE -> filteredProducts
+            SortOption.DISCOUNT ->
+//                    filteredProducts.sortedByDescending { effectiveDiscountPercent(it) }
+                filteredProducts.sortedWith(
+                    compareByDescending<ProductWithPromotion> {
+                        effectiveDiscountPercent(it)
+                    }.thenBy { it.promotion == null }
+                )
+        }
+
+        val categories = products.map { it.product.category }.distinct().sorted()
+
+        return ProductListUiState.Success(
+            products = sorted,
+            categories = categories,
+            selectedCategory = category,
+            sortOption = sortOption
+        )
     }
 }

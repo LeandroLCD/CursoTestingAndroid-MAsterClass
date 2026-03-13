@@ -65,7 +65,7 @@ class ProductDetailViewModel @Inject constructor(
 
     private suspend fun handleError(e: AppError) {
         val newEvent = when (e) {
-            NetworkError -> ProductDetailEvent.NETWORK_ERROR
+            NetworkError() -> ProductDetailEvent.NETWORK_ERROR
             is Validation.InsufficientStock -> ProductDetailEvent.INSUFFICIENT_STOCK_ERROR
             is UnknownError, DatabaseError, NotFoundError, Validation.QuantityMustBePositive -> ProductDetailEvent.UNKNOWN_ERROR
         }

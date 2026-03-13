@@ -33,13 +33,13 @@ class RemoteDataSource @Inject constructor(val miniMarketApiService:MiniMarketAp
 
     private fun mapToDomainError(e:Exception): AppError{
         return when(e){
-            is UnknownHostException -> AppError.NetworkError
-            is SocketTimeoutException -> AppError.NetworkError
-            is IOException -> AppError.NetworkError
+            is UnknownHostException -> AppError.NetworkError()
+            is SocketTimeoutException -> AppError.NetworkError()
+            is IOException -> AppError.NetworkError()
             is HttpException -> {
                 when(e.code()){
                     404 -> AppError.NotFoundError
-                    else -> AppError.NetworkError
+                    else -> AppError.NetworkError()
                 }
             }
             else -> AppError.UnknownError(e.message)

@@ -1,8 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -40,8 +41,12 @@ android {
         compose = true
         buildConfig = true
     }
-    kotlin {
-        jvmToolchain(17)
+}
+
+kotlin{
+    compilerOptions{
+        jvmTarget = JvmTarget.JVM_17
+        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
     }
 }
 
@@ -69,7 +74,6 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.lifecycle.viewmodel.compose)
-    implementation(libs.core.ktx)
     ksp(libs.hilt.compiler.ksp)
 
     //Room

@@ -29,8 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aristidevs.cursotestingandroid.R
-import com.aristidevs.cursotestingandroid.cart.presentation.CartUiState
-import com.aristidevs.cursotestingandroid.cart.presentation.CartViewModel
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductWithPromotion
 import com.aristidevs.cursotestingandroid.productlist.presentation.components.FiltersMenu
 import com.aristidevs.cursotestingandroid.productlist.presentation.components.HomeTopAppBar
@@ -39,14 +37,12 @@ import com.aristidevs.cursotestingandroid.productlist.presentation.components.Pr
 @Composable
 fun ProductListScreen(
     productListViewModel: ProductListViewModel = hiltViewModel(),
-    cartViewMode: CartViewModel = hiltViewModel(),
     navigateToSettings: () -> Unit,
     navigateToProductDetail: (String) -> Unit,
     navigateToCart: () -> Unit
 ) {
 
     val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
-    val cartUiState by cartViewMode.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val filterVisible by productListViewModel.filterVisible.collectAsStateWithLifecycle()
 
@@ -60,15 +56,8 @@ fun ProductListScreen(
         }
     }
 
-    val cartItemCount = remember(cartUiState) {
-        when (val state = cartUiState) {
-            is CartUiState.Success -> {
-                state.cartItems.sumOf { it.cartItem.quantity }
-            }
+    val cartItemCount by productListViewModel.cartItemCount.collectAsStateWithLifecycle()
 
-            else -> 0
-        }
-    }
 
     Scaffold(topBar = {
         HomeTopAppBar(

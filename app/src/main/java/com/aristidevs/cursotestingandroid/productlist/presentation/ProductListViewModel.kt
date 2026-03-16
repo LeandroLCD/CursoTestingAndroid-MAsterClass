@@ -2,6 +2,7 @@ package com.aristidevs.cursotestingandroid.productlist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aristidevs.cursotestingandroid.cart.domain.usecase.GetCartItemCountUseCase
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductPromotion
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductWithPromotion
 import com.aristidevs.cursotestingandroid.productlist.domain.model.SortOption
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
     getProductsUseCase: GetProductsUseCase,
+    getCartItemCountUseCase: GetCartItemCountUseCase,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
@@ -38,6 +40,12 @@ class ProductListViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000)
     )
 
+    val cartItemCount = getCartItemCountUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            initialValue = 0,
+            started = SharingStarted.WhileSubscribed(5000)
+        )
     private val _events = MutableSharedFlow<ProductListEvent>(extraBufferCapacity = 1)
     val events: SharedFlow<ProductListEvent> = _events
 

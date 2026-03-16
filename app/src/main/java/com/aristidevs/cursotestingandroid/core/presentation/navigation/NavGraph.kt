@@ -6,9 +6,8 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.savedstate.savedState
+import androidx.navigation3.ui.NavDisplay
 import com.aristidevs.cursotestingandroid.cart.presentation.CartScreen
 import com.aristidevs.cursotestingandroid.detail.presentation.ProductDetailScreen
 import com.aristidevs.cursotestingandroid.detail.presentation.ProductDetailViewModel

@@ -1,9 +1,7 @@
 package com.aristidevs.cursotestingandroid.detail.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.aristidevs.cursotestingandroid.cart.domain.usecase.AddToCartUseCase
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError.DatabaseError
@@ -11,7 +9,6 @@ import com.aristidevs.cursotestingandroid.core.domain.model.AppError.NetworkErro
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError.NotFoundError
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError.UnknownError
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError.Validation
-import com.aristidevs.cursotestingandroid.core.presentation.navigation.Screen
 import com.aristidevs.cursotestingandroid.detail.domain.usecase.GetProductDetailWithPromotionUseCase
 import com.aristidevs.cursotestingandroid.detail.presentation.ProductDetailEvent.SUCCESS_ADD_TO_CART
 import dagger.assisted.Assisted
@@ -20,14 +17,12 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = ProductDetailViewModel.Factory::class)
 class ProductDetailViewModel @AssistedInject constructor(

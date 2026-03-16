@@ -45,18 +45,14 @@ import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductPromot
 @SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 fun ProductDetailScreen(
-    productId: String,
-    onBack: () -> Unit,
-    productDetailViewModel: ProductDetailViewModel = hiltViewModel()
+    productDetailViewModel: ProductDetailViewModel,
+    onBack: () -> Unit
 ) {
 
     val uiState by productDetailViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    LaunchedEffect(productId) {
-        productDetailViewModel.loadProduct(productId)
-    }
 
     LaunchedEffect(Unit) {
         productDetailViewModel.events.collect { event ->
@@ -84,9 +80,11 @@ fun ProductDetailScreen(
         MarketTopAppBar(
             title = uiState.item?.product?.name.orEmpty(), onBackSelected = { onBack() })
     }, bottomBar = {
-        AddToCartButton(
-            product = uiState.item?.product, isLoading = uiState.isLoading
-        ) { productDetailViewModel.addToCart() }
+        uiState.item?.let {
+            AddToCartButton(
+                product = it.product, isLoading = uiState.isLoading
+            ) { productDetailViewModel.addToCart(it.product.id) }
+        }
     }, snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
         Column(
             modifier = Modifier
@@ -214,7 +212,10 @@ fun ProductDetailScreen(
                                         color = MaterialTheme.colorScheme.errorContainer
                                     ) {
                                         Text(
-                                            stringResource(R.string.detail_promo_label, promotion.label),
+                                            stringResource(
+                                                R.string.detail_promo_label,
+                                                promotion.label
+                                            ),
                                             modifier = Modifier.padding(
                                                 horizontal = 12.dp, vertical = 6.dp
                                             ),
@@ -256,7 +257,10 @@ fun ProductDetailScreen(
                                     ) {
                                         Text(
                                             text = if (hasStock) {
-                                                stringResource(R.string.detail_stock_units, product.stock)
+                                                stringResource(
+                                                    R.string.detail_stock_units,
+                                                    product.stock
+                                                )
                                             } else {
                                                 stringResource(R.string.detail_out_of_stock)
                                             },

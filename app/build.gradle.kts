@@ -69,6 +69,8 @@ dependencies {
     //Navigation3
     implementation(libs.navigation3.ui)
     implementation(libs.navigation3.runtime)
+    implementation(libs.navigation3.viewmodel)
+
 
     //Hilt
     implementation(libs.hilt.android)

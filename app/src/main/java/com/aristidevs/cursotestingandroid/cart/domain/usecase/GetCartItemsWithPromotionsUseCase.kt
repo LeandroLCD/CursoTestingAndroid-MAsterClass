@@ -7,6 +7,7 @@ import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductWithPr
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.ProductRepository
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.PromotionRepository
 import com.aristidevs.cursotestingandroid.productlist.domain.usecase.GetPromotionForProduct
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -21,6 +22,7 @@ class GetCartItemsWithPromotionsUseCase @Inject constructor(
     private val getPromotionForProduct: GetPromotionForProduct,
 ) {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<List<CartItemWithPromotion>> {
         return cartItemRepository.getCartItems().flatMapLatest { cartItems ->
             val ids = cartItems.mapTo(mutableSetOf()) { it.productId }

@@ -1,16 +1,17 @@
 package com.aristidevs.cursotestingandroid.core.presentation.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavGraph
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.savedstate.savedState
 import com.aristidevs.cursotestingandroid.cart.presentation.CartScreen
 import com.aristidevs.cursotestingandroid.detail.presentation.ProductDetailScreen
+import com.aristidevs.cursotestingandroid.detail.presentation.ProductDetailViewModel
 import com.aristidevs.cursotestingandroid.productlist.presentation.ProductListScreen
 import com.aristidevs.cursotestingandroid.settings.presentation.SettingsScreen
 
@@ -38,13 +39,24 @@ fun NavGraph() {
         entry<Screen.Setting> {
             SettingsScreen(onBack = { backStack.removeLastOrNull() })
         }
-        entry<Screen.ProductDetail> { route ->
+        entry<Screen.ProductDetail> {product->
             ProductDetailScreen(
-                productId = route.productId, onBack = { backStack.removeLastOrNull() })
+                productDetailViewModel = hiltViewModel<ProductDetailViewModel, ProductDetailViewModel.Factory>(
+                    creationCallback = {factory->
+                        factory.create(product.productId)
+                    }
+                )
+            ) { backStack.removeLastOrNull() }
         }
     }
 
     NavDisplay(
-        backStack = backStack, entryProvider = entries, onBack = { backStack.removeLastOrNull() })
+        backStack = backStack,
+        entryProvider = entries,
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator()
+        ),
+        onBack = { backStack.removeLastOrNull() })
 
 }

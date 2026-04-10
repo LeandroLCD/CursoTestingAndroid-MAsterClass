@@ -24,7 +24,7 @@ GetCartItemCountUseCaseTest {
     }
 
     @Test
-    fun `returns 0 when cart is empty`() = runTest {
+    fun returns_0_when_cart_is_empty() = runTest {
         every { cartItemRepository.getCartItems() } returns flowOf(emptyList())
 
         val result = useCase().first()
@@ -33,7 +33,7 @@ GetCartItemCountUseCaseTest {
     }
 
     @Test
-    fun `returns total units summing all item quantities`() = runTest {
+    fun returns_total_units_summing_all_item_quantities() = runTest {
         every { cartItemRepository.getCartItems() } returns flowOf(
             listOf(
                 CartItem(productId = "p1", quantity = 2),
@@ -48,7 +48,7 @@ GetCartItemCountUseCaseTest {
     }
 
     @Test
-    fun `returns correct count with mixed quantities`() = runTest {
+    fun returns_correct_count_with_mixed_quantities() = runTest {
         every { cartItemRepository.getCartItems() } returns flowOf(
             listOf(
                 CartItem(productId = "p1", quantity = 1),
@@ -63,7 +63,7 @@ GetCartItemCountUseCaseTest {
     }
 
     @Test
-    fun `returns quantity when only one item in cart`() = runTest {
+    fun returns_quantity_when_only_one_item_in_cart() = runTest {
         every { cartItemRepository.getCartItems() } returns flowOf(
             listOf(CartItem(productId = "p1", quantity = 4))
         )

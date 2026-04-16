@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CursoTestingAndroid</string>
+    <string name="products">%1$d prodotti</string>
+    <string name="products_not_found">Nessun prodotto trovato</string>
+    <string name="detail_insufficient_stock_error">Scorte insufficienti</string>
+    <string name="detail_network_error">Nessuna connessione, controlla la tua rete</string>
+    <string name="detail_unknown_error">Errore imprevisto, riprova</string>
+    <string name="detail_success_add_to_cart">Prodotto aggiunto</string>
+    <string name="detail_percent_off">%1$d%% OFF</string>
+    <string name="detail_promo_label">PROMO: %1$s</string>
+    <string name="detail_stock_available">Disponibile in magazzino</string>
+    <string name="detail_stock_units">%1$d unità</string>
+    <string name="detail_out_of_stock">Esaurito</string>
+    <string name="detail_button_out_of_stock">Non disponibile</string>
+    <string name="detail_button_add_to_cart">Aggiungi al carrello</string>
+    <string name="error">ERRORE</string>
+    <string name="setting">Impostazioni</string>
+    <string name="filter_and_visualization">Filtri e visualizzazione</string>
+    <string name="settings_in_stock_only_title">Solo prodotti disponibili</string>
+    <string name="settings_in_stock_only_description">Mostra solo prodotti disponibili</string>
+    <string name="settings_show_taxes_title">Mostra tasse incluse</string>
+    <string name="settings_show_taxes_description">Includi le tasse nei prezzi visualizzati</string>
+    <string name="settings_appearance">Aspetto</string>
+    <string name="settings_theme_title">Tema dell\'app</string>
+    <string name="settings_theme_description">Scegli tra chiaro, scuro o segui il sistema</string>
+    <string name="settings_theme_system">Sistema</string>
+    <string name="settings_theme_light">Chiaro</string>
+    <string name="settings_theme_dark">Scuro</string>
+</resources>
+

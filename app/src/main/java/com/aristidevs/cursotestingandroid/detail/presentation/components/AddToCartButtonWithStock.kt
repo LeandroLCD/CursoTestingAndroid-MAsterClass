@@ -17,13 +17,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.aristidevs.cursotestingandroid.productlist.domain.model.Product
+import com.aristidevs.cursotestingandroid.R
 
 @Composable
 fun AddToCartButtonWithStock(
-    modifier: Modifier = Modifier, product: Product, isLoading: Boolean, addToCart: () -> Unit
+    modifier: Modifier = Modifier, isLoading: Boolean, addToCart: () -> Unit
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(), shadowElevation = 8.dp, tonalElevation = 2.dp
@@ -43,7 +44,8 @@ fun AddToCartButtonWithStock(
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    "Agregar al carrito", fontWeight = FontWeight.Bold
+                    stringResource(R.string.detail_button_add_to_cart),
+                    fontWeight = FontWeight.Bold
                 )
             }
         }

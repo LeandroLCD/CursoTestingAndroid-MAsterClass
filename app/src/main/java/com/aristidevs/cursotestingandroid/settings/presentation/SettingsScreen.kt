@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.paddingFrom
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -29,15 +28,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aristidevs.cursotestingandroid.R
 import com.aristidevs.cursotestingandroid.core.domain.model.ThemeMode
 import com.aristidevs.cursotestingandroid.core.presentation.components.MarketTopAppBar
 
-@Preview
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit = {},
@@ -49,7 +48,7 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             MarketTopAppBar(
-                title = "Ajustes", onBackSelected = { onBack() })
+                title = stringResource(R.string.setting), onBackSelected = { onBack() })
         }) { paddingValues ->
         Column(
             modifier = Modifier
@@ -79,7 +78,7 @@ fun SettingsScreen(
                         )
 
                         Text(
-                            "Filtros y visualización",
+                            stringResource(R.string.filter_and_visualization),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold
@@ -97,12 +96,12 @@ fun SettingsScreen(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                "Solo productos en Stock",
+                                stringResource(R.string.settings_in_stock_only_title),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                "Muestra únicamente productos disponibles",
+                                stringResource(R.string.settings_in_stock_only_description),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -129,12 +128,12 @@ fun SettingsScreen(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                "Mostrar impuestos incluídos",
+                                stringResource(R.string.settings_show_taxes_title),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                "Incluir impuestos de los precios mostrados",
+                                stringResource(R.string.settings_show_taxes_description),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -169,7 +168,7 @@ fun SettingsScreen(
                         )
 
                         Text(
-                            "Apariencia",
+                            stringResource(R.string.settings_appearance),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold
@@ -183,12 +182,12 @@ fun SettingsScreen(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            "Tema de la aplicación",
+                            stringResource(R.string.settings_theme_title),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            "Elige entre modo claro, oscuro o seguir el sistema",
+                            stringResource(R.string.settings_theme_description),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -200,19 +199,19 @@ fun SettingsScreen(
                                 shape = SegmentedButtonDefaults.itemShape(0, 3),
                                 onClick = { settingsViewModel.setThemeMode(ThemeMode.SYSTEM) },
                                 selected = uiState.themeMode == ThemeMode.SYSTEM,
-                                label = { Text("Sistema") }
+                                label = { Text(stringResource(R.string.settings_theme_system)) }
                             )
                             SegmentedButton(
                                 shape = SegmentedButtonDefaults.itemShape(1, 3),
                                 onClick = { settingsViewModel.setThemeMode(ThemeMode.LIGHT) },
                                 selected = uiState.themeMode == ThemeMode.LIGHT,
-                                label = { Text("Claro") }
+                                label = { Text(stringResource(R.string.settings_theme_light)) }
                             )
                             SegmentedButton(
                                 shape = SegmentedButtonDefaults.itemShape(2, 3),
                                 onClick = { settingsViewModel.setThemeMode(ThemeMode.DARK) },
                                 selected = uiState.themeMode == ThemeMode.DARK,
-                                label = { Text("Oscuro") }
+                                label = { Text(stringResource(R.string.settings_theme_dark)) }
                             )
                         }
                     }

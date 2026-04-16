@@ -6,9 +6,7 @@ import com.aristidevs.cursotestingandroid.cart.domain.model.CartItem
 import com.aristidevs.cursotestingandroid.cart.domain.repository.CartItemRepository
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError
 import com.aristidevs.cursotestingandroid.productlist.data.local.LocalDataSource
-import com.aristidevs.cursotestingandroid.productlist.data.mappers.toDomain
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -31,12 +29,12 @@ class CartItemRepositoryImpl @Inject constructor(private val localDataSource: Lo
     }
 
     override suspend fun removeFromCart(productId: String) {
-        val item = localDataSource.getCartItemById(productId) ?: throw AppError.NotFoundError
+        val item = localDataSource.getCartItemById(productId) ?: throw AppError.NotFoundError()
         localDataSource.deleteCartItem(item)
     }
 
     override suspend fun updateQuantity(productId: String, quantity: Int) {
-        val item = localDataSource.getCartItemById(productId) ?: throw AppError.NotFoundError
+        val item = localDataSource.getCartItemById(productId) ?: throw AppError.NotFoundError()
         localDataSource.updateCartItem(item.copy(quantity = quantity))
     }
 

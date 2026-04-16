@@ -31,7 +31,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
@@ -48,7 +47,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.room.util.TableInfo
 import coil3.compose.AsyncImage
 import com.aristidevs.cursotestingandroid.cart.domain.model.CartSummary
 import com.aristidevs.cursotestingandroid.cart.presentation.model.CartItemWithPromotion
@@ -92,7 +90,9 @@ fun CartScreen(
                         .fillMaxSize()
                         .padding(paddingValues),
                     state,
-                ) { cartViewModel.loadCart() }
+                ){
+                    onBack.invoke()
+                }
             }
 
             is CartUiState.Success -> {
@@ -115,7 +115,7 @@ fun CartScreen(
 
 @Composable
 fun CartErrorStateScreen(
-    modifier: Modifier = Modifier, state: CartUiState.Error, onRetrySelected: () -> Unit
+    modifier: Modifier = Modifier, state: CartUiState.Error, onBackStack: () -> Unit
 ) {
     Column(
         modifier = modifier.padding(16.dp),
@@ -128,8 +128,8 @@ fun CartErrorStateScreen(
             color = MaterialTheme.colorScheme.error
         )
         Spacer(Modifier.height(16.dp))
-        Button(onClick = { onRetrySelected() }) {
-            Text("Reintentar")
+        Button(onClick = { onBackStack.invoke() }) {
+            Text("Volver")
         }
     }
 }

@@ -14,11 +14,11 @@ class AddToCartUseCase @Inject constructor(
 
     suspend operator fun invoke(productId: String, quantity: Int = 1) {
         if (quantity <= 0) {
-            throw AppError.Validation.QuantityMustBePositive
+            throw AppError.Validation.QuantityMustBePositive()
         }
 
         val product: Product =
-            productRepository.getProductById(productId).first() ?: throw AppError.NotFoundError
+            productRepository.getProductById(productId).first() ?: throw AppError.NotFoundError()
 
         val existingItem = cartItemRepository.getCartItemById(productId)
         val newQuantity = (existingItem?.quantity ?: 0) + quantity

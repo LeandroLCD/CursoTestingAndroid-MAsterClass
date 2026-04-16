@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -43,6 +44,10 @@ android {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 kotlin{
     compilerOptions{
         jvmTarget = JvmTarget.JVM_17
@@ -69,6 +74,8 @@ dependencies {
     //Navigation3
     implementation(libs.navigation3.ui)
     implementation(libs.navigation3.runtime)
+    implementation(libs.navigation3.viewmodel)
+
 
     //Hilt
     implementation(libs.hilt.android)
@@ -102,6 +109,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

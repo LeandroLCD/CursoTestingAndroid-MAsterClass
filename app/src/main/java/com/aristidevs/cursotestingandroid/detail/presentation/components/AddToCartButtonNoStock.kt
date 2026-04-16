@@ -8,21 +8,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.aristidevs.cursotestingandroid.R
 
 @Composable
 fun AddToCartButtonNoStock(modifier: Modifier = Modifier) {
@@ -44,7 +42,8 @@ fun AddToCartButtonNoStock(modifier: Modifier = Modifier) {
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    "Sin stock disponible", fontWeight = FontWeight.Bold
+                    stringResource(R.string.detail_button_out_of_stock),
+                    fontWeight = FontWeight.Bold
                 )
             }
         }

@@ -11,6 +11,8 @@ import com.aristidevs.cursotestingandroid.cart.domain.repository.CartItemReposit
 import com.aristidevs.cursotestingandroid.core.data.coroutines.DefaultDispatchersProvider
 import com.aristidevs.cursotestingandroid.core.domain.coroutines.DispatchersProvider
 import com.aristidevs.cursotestingandroid.core.data.local.database.MiniMarketDatabase
+import com.aristidevs.cursotestingandroid.core.data.util.SystemClock
+import com.aristidevs.cursotestingandroid.core.domain.util.Clock
 import com.aristidevs.cursotestingandroid.productlist.data.local.database.dao.ProductDao
 import com.aristidevs.cursotestingandroid.productlist.data.local.database.dao.PromotionDao
 import com.aristidevs.cursotestingandroid.productlist.data.repository.ProductRepositoryImpl
@@ -91,5 +93,12 @@ object DataModule {
     fun provideCartRepository(cartItemRepositoryImpl: CartItemRepositoryImpl): CartItemRepository {
         return cartItemRepositoryImpl
     }
+
+    @Provides
+    @Singleton
+    fun provideClock(systemClock: SystemClock): Clock{
+        return systemClock
+    }
+
 
 }

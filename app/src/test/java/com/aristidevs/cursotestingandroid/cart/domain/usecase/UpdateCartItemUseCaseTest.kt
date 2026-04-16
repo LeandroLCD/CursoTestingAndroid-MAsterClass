@@ -1,114 +1,122 @@
 package com.aristidevs.cursotestingandroid.cart.domain.usecase
 
-import com.aristidevs.cursotestingandroid.cart.domain.repository.CartItemRepository
+import com.aristidevs.cursotestingandroid.core.builders.cartItem
+import com.aristidevs.cursotestingandroid.core.builders.product
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError
-import com.aristidevs.cursotestingandroid.productlist.domain.model.Product
-import com.aristidevs.cursotestingandroid.productlist.domain.repository.ProductRepository
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import kotlinx.coroutines.flow.flowOf
+import com.aristidevs.cursotestingandroid.core.fakes.FakeCartItemRepository
+import com.aristidevs.cursotestingandroid.core.fakes.FakeProductRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Before
+import org.junit.Assert.*
 import org.junit.Test
 
 class UpdateCartItemUseCaseTest {
 
-    private lateinit var cartItemRepository: CartItemRepository
-    private lateinit var productRepository: ProductRepository
-    private lateinit var useCase: UpdateCartItemUseCase
+    @Test
+    fun given_negative_quantity_when_invokes_then_throws_quantity_must_be_positive() = runTest {
+        //Given
+        val fakeProductRepository = FakeProductRepository()
+        val fakeCartItemRepository = FakeCartItemRepository()
+        val useCase = UpdateCartItemUseCase(fakeCartItemRepository, fakeProductRepository)
 
-    @Before
-    fun setUp() {
-        cartItemRepository = mockk(relaxed = true)
-        productRepository = mockk()
-        useCase = UpdateCartItemUseCase(cartItemRepository, productRepository)
+        //When
+        val exception = runCatching { useCase("id", -1) }.exceptionOrNull()
+
+        //Then
+        assertTrue(exception is AppError.Validation.QuantityMustBePositive)
     }
 
     @Test
-    fun should_throw_QuantityMustBePositive_when_quantity_is_negative_in_invoke() = runTest {
-        //GIVEN
-        val productId = "1"
-        val quantity = -1
-        //WHEN
-        val result = runCatching { useCase.invoke(productId, quantity) }
+    fun given_zero_quantity_when_invoke_then_removes_items_from_cart() = runTest {
+        //Given
+        val productId = "id1"
+        val product = product {
+            withId(productId)
+        }
+        val cartItemProduct = cartItem {
+            withProductId(productId)
+            withQuantity(3)
+        }
+        val fakeProductRepository = FakeProductRepository().apply { setProducts(listOf(product)) }
+        val fakeCartItemRepository = FakeCartItemRepository().apply {
+            setCartItems(listOf(cartItemProduct))
+        }
+        val useCase = UpdateCartItemUseCase(fakeCartItemRepository, fakeProductRepository)
 
-        //THEN
-        assert(result.exceptionOrNull() is AppError.Validation.QuantityMustBePositive)
+        //when
+        useCase(productId, 0)
+
+        //then
+        val items = fakeCartItemRepository.getCartItems().first()
+        assertEquals(0, items.size)
     }
 
     @Test
-    fun should_remove_item_from_cart_when_quantity_is_zero_in_invoke() = runTest {
-        //GIVEN
-        val productId = "1"
-        val quantity = 0
+    fun given_missing_product_when_invoke_then_throws_not_found() = runTest {
+        //Given
+        val fakeProductRepository = FakeProductRepository().apply { setProducts(emptyList()) }
+        val fakeCart = FakeCartItemRepository()
+        val useCase = UpdateCartItemUseCase(fakeCart, fakeProductRepository)
 
-        //WHEN
-        useCase.invoke(productId, quantity)
+        //When
+        val ex = runCatching { useCase("not", 1) }.exceptionOrNull()
 
-        //THEN
-        coVerify { cartItemRepository.removeFromCart(productId) }
-        coVerify(exactly = 0) { cartItemRepository.updateQuantity(any(), any()) }
+        //Then
+        assertTrue(ex is AppError.NotFoundError)
     }
 
     @Test
-    fun should_throw_NotFoundError_when_product_does_not_exist_in_invoke() = runTest {
-        //GIVEN
-        val productId = "1"
-        val quantity = 2
-        every { productRepository.getProductById(productId) } returns flowOf(null)
+    fun given_requested_quantity_greater_than_stock_when_invoke_then_throws_insufficient_stock() =
+        runTest {
 
-        //WHEN
-        val result = runCatching { useCase.invoke(productId, quantity) }
+            //Given
+            val productId = "product-id"
+            val product = product {
+                withId(productId)
+                withStock(3)
+            }
 
-        //THEN
-        assert(result.exceptionOrNull() is AppError.NotFoundError)
-    }
+            val fakeProductRepository =
+                FakeProductRepository().apply { setProducts(listOf(product)) }
 
-    @Test
-    fun should_throw_InsufficientStock_when_quantity_exceeds_product_stock_in_invoke() = runTest {
-        //GIVEN
-        val productId = "1"
-        val quantity = 10
-        val product = Product(
-            id = productId,
-            name = "Product 1",
-            description = "Description",
-            price = 10.0,
-            category = "Category",
-            stock = 5
-        )
-        every { productRepository.getProductById(productId) } returns flowOf(product)
+            val fakeCart = FakeCartItemRepository().apply {
+                setCartItems(listOf(cartItem { withProductId(productId); withQuantity(1) }))
+            }
 
-        //WHEN
-        val result = runCatching { useCase.invoke(productId, quantity) }
+            val useCase = UpdateCartItemUseCase(fakeCart, fakeProductRepository)
 
-        //THEN
-        val exception = result.exceptionOrNull() as? AppError.Validation.InsufficientStock
-        assert(exception != null)
-        assertEquals(5, exception?.available)
-    }
+            //When
+            val ex = runCatching { useCase(productId, 5) }.exceptionOrNull()
+
+            //Then
+            assertTrue(ex is AppError.Validation.InsufficientStock)
+        }
 
     @Test
-    fun should_update_quantity_when_quantity_is_valid_and_stock_is_sufficient_in_invoke() = runTest {
-        //GIVEN
-        val productId = "1"
-        val quantity = 3
-        val product = Product(
-            id = productId,
-            name = "Product 1",
-            description = "Description",
-            price = 10.0,
-            category = "Category",
-            stock = 5
-        )
-        every { productRepository.getProductById(productId) } returns flowOf(product)
+    fun given_valid_product_and_quantity_when_invoke_then_updates_cart_item() = runTest {
+        //Given
+        val productId = "product-id"
+        val product = product {
+            withId(productId)
+            withStock(20)
+        }
 
-        //WHEN
-        useCase.invoke(productId, quantity)
+        val fakeProductRepository =
+            FakeProductRepository().apply { setProducts(listOf(product)) }
 
-        //THEN
-        coVerify { cartItemRepository.updateQuantity(productId, quantity) }
+        val fakeCart = FakeCartItemRepository().apply {
+            setCartItems(listOf(cartItem { withProductId(productId); withQuantity(1) }))
+        }
+
+        val useCase = UpdateCartItemUseCase(fakeCart, fakeProductRepository)
+
+        //When
+        useCase(productId, 5)
+
+        //then
+        val items = fakeCart.getCartItems().first()
+        assertEquals(1, items.size)
+        assertEquals(5, items.first().quantity)
     }
+
 }

@@ -3,7 +3,6 @@ package com.aristidevs.cursotestingandroid.core.fakes
 import com.aristidevs.cursotestingandroid.core.domain.model.ThemeMode
 import com.aristidevs.cursotestingandroid.productlist.domain.model.SortOption
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.SettingsRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

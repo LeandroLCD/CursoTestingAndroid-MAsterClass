@@ -1,6 +1,8 @@
 package com.aristidevs.cursotestingandroid.productlist.presentation
 
+import com.aristidevs.cursotestingandroid.cart.domain.usecase.GetCartItemCountUseCase
 import com.aristidevs.cursotestingandroid.core.MainDispatcherRule
+import com.aristidevs.cursotestingandroid.core.fakes.FakeCartItemRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakeProductRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakePromotionRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakeSettingsRepository
@@ -34,15 +36,19 @@ class ProductListViewModelMockTest {
         fakeProduct: ProductRepository = FakeProductRepository(),
         fakeSettings: FakeSettingsRepository = FakeSettingsRepository(),
         fakePromotion: FakePromotionRepository = FakePromotionRepository(),
-        fakeClock: FakeSystemClock = FakeSystemClock()
+        fakeClock: FakeSystemClock = FakeSystemClock(),
+        fakeCartItemRepository: FakeCartItemRepository = FakeCartItemRepository()
     ): ProductListViewModel {
 
         val getProductUseCase = GetProductsUseCase(
             fakeProduct, fakePromotion, GetPromotionForProduct(), fakeSettings, fakeClock
         )
+        val getCartItemCountUseCase = GetCartItemCountUseCase(fakeCartItemRepository)
 
         return ProductListViewModel(
-            getProductsUseCase = getProductUseCase, settingsRepository = settingsRepository
+            getProductsUseCase = getProductUseCase,
+            settingsRepository = settingsRepository,
+            getCartItemCountUseCase = getCartItemCountUseCase
         )
     }
 

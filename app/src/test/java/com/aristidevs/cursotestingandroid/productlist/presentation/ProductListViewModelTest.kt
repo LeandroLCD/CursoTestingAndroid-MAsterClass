@@ -1,9 +1,10 @@
 package com.aristidevs.cursotestingandroid.productlist.presentation
 
 import app.cash.turbine.test
+import com.aristidevs.cursotestingandroid.cart.domain.usecase.GetCartItemCountUseCase
 import com.aristidevs.cursotestingandroid.core.MainDispatcherRule
 import com.aristidevs.cursotestingandroid.core.builders.product
-import com.aristidevs.cursotestingandroid.core.domain.util.Clock
+import com.aristidevs.cursotestingandroid.core.fakes.FakeCartItemRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakeProductRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakePromotionRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakeSettingsRepository
@@ -14,7 +15,8 @@ import com.aristidevs.cursotestingandroid.productlist.domain.usecase.GetProducts
 import com.aristidevs.cursotestingandroid.productlist.domain.usecase.GetPromotionForProduct
 import com.aristidevs.cursotestingandroid.productlist.presentation.ProductListUiState.Success
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -27,7 +29,8 @@ class ProductListViewModelTest {
         fakeProduct: ProductRepository = FakeProductRepository(),
         fakeSettings: FakeSettingsRepository = FakeSettingsRepository(),
         fakePromotion: FakePromotionRepository = FakePromotionRepository(),
-        fakeClock: FakeSystemClock = FakeSystemClock()
+        fakeClock: FakeSystemClock = FakeSystemClock(),
+        fakeCartItemRepository: FakeCartItemRepository = FakeCartItemRepository()
     ): ProductListViewModel {
         val getProductUseCase = GetProductsUseCase(
             fakeProduct,
@@ -38,6 +41,7 @@ class ProductListViewModelTest {
         )
         return ProductListViewModel(
             getProductsUseCase = getProductUseCase,
+            getCartItemCountUseCase = GetCartItemCountUseCase(fakeCartItemRepository),
             settingsRepository = fakeSettings
         )
     }

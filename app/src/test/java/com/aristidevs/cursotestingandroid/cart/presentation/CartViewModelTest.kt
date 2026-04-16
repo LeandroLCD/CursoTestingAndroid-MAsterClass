@@ -52,10 +52,10 @@ class CartViewModelTest {
         )
 
         return CartViewModel(
-            cartItemRepository,
-            getCartSummaryUseCase,
-            updateCartItemUseCase,
-            getCartItemsWithPromotionsUseCase
+            getCartSummaryUseCase = getCartSummaryUseCase,
+            getCartItemsWithPromotionsUseCase = getCartItemsWithPromotionsUseCase,
+            cartItemRepository = cartItemRepository,
+            updateCartItemUseCase = updateCartItemUseCase
         )
     }
 

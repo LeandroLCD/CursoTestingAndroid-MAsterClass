@@ -38,7 +38,7 @@ class FakeCartItemRepository : CartItemRepository {
             currentItems.removeAt(existingIndex)
             _cartItems.value = currentItems
         } else {
-            throw AppError.NotFoundError
+            throw AppError.NotFoundError()
         }
 
     }
@@ -51,7 +51,7 @@ class FakeCartItemRepository : CartItemRepository {
             currentItems[existingIndex] = currentItems[existingIndex].copy(quantity = quantity)
             _cartItems.value = currentItems
         } else {
-            throw AppError.NotFoundError
+            throw AppError.NotFoundError()
         }
 
     }

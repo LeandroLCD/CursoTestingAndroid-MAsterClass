@@ -1,4 +1,4 @@
-package com.aristidevs.cursotestingandroid.detail.presentation
+package com.aristidevs.cursotestingandroid.detail.presentation.states
 
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductWithPromotion
 

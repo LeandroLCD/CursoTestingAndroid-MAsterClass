@@ -27,5 +27,7 @@
     <string name="settings_theme_system">System</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
+    <string name="database_error">Critical database error.</string>
+    <string name="quantity_must_be_positive_error">Quantity must be positive</string>
 </resources>
 

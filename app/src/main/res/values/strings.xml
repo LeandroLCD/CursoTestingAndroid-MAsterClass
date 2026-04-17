@@ -26,4 +26,6 @@
     <string name="settings_theme_system">Sistema</string>
     <string name="settings_theme_light">Claro</string>
     <string name="settings_theme_dark">Oscuro</string>
+    <string name="database_error">Error crítico en la base de datos.</string>
+    <string name="quantity_must_be_positive_error">La cantidad debe ser positiva</string>
 </resources>

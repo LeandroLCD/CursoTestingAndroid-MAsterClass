@@ -10,9 +10,9 @@ class FailingProductRepositoryStub(private val exception: Throwable): ProductRep
 
     override fun getProducts(): Flow<List<Product>> = flow { throw exception}
 
-    override fun getProductById(id: String): Flow<Product?> = flowOf()
+    override fun getProductById(id: String): Flow<Product?> = flow { throw exception}
 
-    override fun getProductsByIds(ids: Set<String>): Flow<List<Product>> = flowOf()
+    override fun getProductsByIds(ids: Set<String>): Flow<List<Product>> = flow { throw exception}
 
     override suspend fun refreshProduct() {}
 }

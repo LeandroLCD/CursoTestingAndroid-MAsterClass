@@ -39,7 +39,9 @@ import coil3.compose.AsyncImage
 import com.aristidevs.cursotestingandroid.R
 import com.aristidevs.cursotestingandroid.core.presentation.components.MarketTopAppBar
 import com.aristidevs.cursotestingandroid.detail.presentation.components.AddToCartButton
+import com.aristidevs.cursotestingandroid.detail.presentation.states.ProductDetailEvent
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductPromotion
+import com.aristidevs.cursotestingandroid.ui.widget.stringThrowable
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @Composable
@@ -60,12 +62,8 @@ fun ProductDetailScreen(
                     snackbarHostState.showSnackbar(context.getString(R.string.detail_insufficient_stock_error))
                 }
 
-                ProductDetailEvent.NETWORK_ERROR -> {
-                    snackbarHostState.showSnackbar(context.getString(R.string.detail_network_error))
-                }
-
-                ProductDetailEvent.UNKNOWN_ERROR -> {
-                    snackbarHostState.showSnackbar(context.getString(R.string.detail_unknown_error))
+                is ProductDetailEvent.Error -> {
+                    snackbarHostState.showSnackbar(context.stringThrowable(event.cause))
                 }
 
                 ProductDetailEvent.SUCCESS_ADD_TO_CART -> {

@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aristidevs.cursotestingandroid.cart.domain.usecase.AddToCartUseCase
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError
-import com.aristidevs.cursotestingandroid.core.domain.model.AppError.DatabaseError
-import com.aristidevs.cursotestingandroid.core.domain.model.AppError.NetworkError
-import com.aristidevs.cursotestingandroid.core.domain.model.AppError.NotFoundError
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError.UnknownError
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError.Validation
 import com.aristidevs.cursotestingandroid.detail.domain.usecase.GetProductDetailWithPromotionUseCase
-import com.aristidevs.cursotestingandroid.detail.presentation.ProductDetailEvent.SUCCESS_ADD_TO_CART
+import com.aristidevs.cursotestingandroid.detail.presentation.states.ProductDetailEvent
+import com.aristidevs.cursotestingandroid.detail.presentation.states.ProductDetailEvent.SUCCESS_ADD_TO_CART
+import com.aristidevs.cursotestingandroid.detail.presentation.states.ProductDetailUiState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -34,7 +33,7 @@ class ProductDetailViewModel @AssistedInject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiState =
-        getProductDetailWithPromotionUseCase(productId).mapLatest { product ->
+        getProductDetailWithPromotionUseCase.invoke(productId).mapLatest { product ->
             ProductDetailUiState(item = product, isLoading = false)
         }.catch { e: Throwable ->
             if (e is AppError) {
@@ -56,7 +55,7 @@ class ProductDetailViewModel @AssistedInject constructor(
     fun addToCart(productId: String) {
         viewModelScope.launch {
             try {
-                addToCartUseCase(productId)
+                addToCartUseCase.invoke(productId)
                 _events.emit(SUCCESS_ADD_TO_CART)
             } catch (e: AppError) {
                 handleError(e)
@@ -68,10 +67,8 @@ class ProductDetailViewModel @AssistedInject constructor(
 
     private suspend fun handleError(e: AppError) {
         val newEvent = when (e) {
-            NetworkError() -> ProductDetailEvent.NETWORK_ERROR
             is Validation.InsufficientStock -> ProductDetailEvent.INSUFFICIENT_STOCK_ERROR
-            is UnknownError, is DatabaseError, is NotFoundError, is Validation.QuantityMustBePositive -> ProductDetailEvent.UNKNOWN_ERROR
-            else -> ProductDetailEvent.UNKNOWN_ERROR
+            else -> ProductDetailEvent.Error(e)
         }
         _events.emit(newEvent)
     }

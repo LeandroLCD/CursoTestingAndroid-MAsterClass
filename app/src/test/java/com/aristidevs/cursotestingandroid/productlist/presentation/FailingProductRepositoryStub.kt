@@ -4,7 +4,6 @@ import com.aristidevs.cursotestingandroid.productlist.domain.model.Product
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 
 class FailingProductRepositoryStub(private val exception: Throwable): ProductRepository {
 

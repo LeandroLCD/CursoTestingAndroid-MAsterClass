@@ -25,6 +25,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    permissions:
+      contents: read        # Leer el repositorio
+      checks: write         # Crear check-runs (requerido por publish-unit-test-result-action)
+      pull-requests: write  # Publicar comentarios en Pull Requests
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4

@@ -35,8 +35,8 @@ class ProductRepositoryImpl @Inject constructor(
                     if (!refreshMutex.tryLock()) return@launch
                     try {
                         refreshProduct()
-                    } catch (e: Exception) {
-
+                    } catch (e: Throwable) {
+                        e.printStackTrace()
                     } finally {
                         refreshMutex.unlock()
                     }

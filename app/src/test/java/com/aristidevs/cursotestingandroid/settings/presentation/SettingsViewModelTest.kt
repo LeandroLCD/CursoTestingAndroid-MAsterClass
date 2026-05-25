@@ -96,7 +96,6 @@ class SettingsViewModelTest {
             settingsRepository.setInStockOnly(true)
 
             assertTrue(awaitItem().inStockOnly)
-
             cancelAndIgnoreRemainingEvents()
         }
     }

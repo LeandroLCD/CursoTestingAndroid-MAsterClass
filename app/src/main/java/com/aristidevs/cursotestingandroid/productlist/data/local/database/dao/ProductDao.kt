@@ -14,20 +14,23 @@ interface ProductDao {
     fun getAllProducts(): Flow<List<ProductEntity>>
 
     @Query("SELECT * FROM products WHERE id=:id")
-    fun getProductById(id:String): Flow<ProductEntity>
+    fun getProductById(id: String): Flow<ProductEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertProducts(products:List<ProductEntity>)
+    suspend fun insertProducts(products: List<ProductEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProducts(product: ProductEntity)
 
     @Query("DELETE FROM products")
     suspend fun clearProducts()
 
     @Transaction
-    suspend fun replaceAll(products:List<ProductEntity>){
+    suspend fun replaceAll(products: List<ProductEntity>) {
         clearProducts()
         insertProducts(products)
     }
 
     @Query("SELECT * FROM products WHERE id IN (:productsIds)")
-    fun getProductsByIds(productsIds:List<String>):Flow<List<ProductEntity>>
+    fun getProductsByIds(productsIds: List<String>): Flow<List<ProductEntity>>
 }

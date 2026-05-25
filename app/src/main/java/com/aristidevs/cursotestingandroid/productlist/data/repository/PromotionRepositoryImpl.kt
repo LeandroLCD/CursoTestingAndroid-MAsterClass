@@ -11,7 +11,6 @@ import com.aristidevs.cursotestingandroid.productlist.domain.repository.Promotio
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -39,14 +38,11 @@ class PromotionRepositoryImpl @Inject constructor(
                     try {
                         refreshPromotions()
                     } catch (e: Exception) {
-
+                        e.printStackTrace()
                     } finally {
                         refreshMutex.unlock()
                     }
                 }
-            }
-            .catch {
-                //Log importante
             }
     }
 

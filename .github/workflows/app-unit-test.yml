@@ -109,7 +109,7 @@ jobs:
           echo "📋 Revisa el reporte para más detalles"
           exit 1
 
-      - name: 🧹 Limpiar archivos temporales
+      - name: 🧹 Limpiar archivos temporales.
         if: always()
         run: |
           echo "🧹 Limpiando archivos temporales..."

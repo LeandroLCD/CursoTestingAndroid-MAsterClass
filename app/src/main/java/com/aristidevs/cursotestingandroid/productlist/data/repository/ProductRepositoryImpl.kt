@@ -52,6 +52,7 @@ class ProductRepositoryImpl @Inject constructor(
         return localDataSource.getProductById(id)
             .map { entity ->  entity?.toDomain() }
             .catch { e ->
+                e.printStackTrace()
                 //analytic.trackError(e)
             }
     }

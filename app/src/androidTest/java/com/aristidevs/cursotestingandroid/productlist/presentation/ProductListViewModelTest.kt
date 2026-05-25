@@ -2,13 +2,11 @@ package com.aristidevs.cursotestingandroid.productlist.presentation
 
 import androidx.lifecycle.viewModelScope
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.cancel
 import app.cash.turbine.test
 import com.aristidevs.cursotestingandroid.cart.domain.repository.CartItemRepository
 import com.aristidevs.cursotestingandroid.cart.domain.usecase.GetCartItemCountUseCase
 import com.aristidevs.cursotestingandroid.core.MainDispatcherRule
 import com.aristidevs.cursotestingandroid.core.mockwebserver.MiniMarketApiOkhttpDispatcher
-import com.aristidevs.cursotestingandroid.core.mockwebserver.MockWebServerUrlHolder
 import com.aristidevs.cursotestingandroid.core.mockwebserver.rules.MockWebServerRule
 import com.aristidevs.cursotestingandroid.core.utils.TestAssets.asAssets
 import com.aristidevs.cursotestingandroid.core.utils.awaitMatches
@@ -19,6 +17,7 @@ import com.aristidevs.cursotestingandroid.productlist.domain.repository.Settings
 import com.aristidevs.cursotestingandroid.productlist.domain.usecase.GetProductsUseCase
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals

@@ -4,7 +4,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.aristidevs.cursotestingandroid.core.domain.model.ThemeMode
-import com.aristidevs.cursotestingandroid.core.mockwebserver.MockWebServerUrlHolder
 import com.aristidevs.cursotestingandroid.core.mockwebserver.rules.MockWebServerRule
 import com.aristidevs.cursotestingandroid.productlist.domain.model.SortOption
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.SettingsRepository
@@ -12,7 +11,6 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull

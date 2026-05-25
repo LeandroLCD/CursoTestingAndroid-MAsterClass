@@ -1,6 +1,7 @@
 package com.aristidevs.cursotestingandroid.productlist.data.repository
 
 import app.cash.turbine.test
+import com.aristidevs.cursotestingandroid.core.MainDispatcherRule
 import com.aristidevs.cursotestingandroid.core.TestDispatchersProvider
 import com.aristidevs.cursotestingandroid.productlist.data.local.LocalDataSource
 import com.aristidevs.cursotestingandroid.productlist.data.remote.RemoteDataSource
@@ -39,7 +40,7 @@ class ProductRepositoryImplTest {
         repository = ProductRepositoryImpl(
             remoteDataSource = remoteDataSource,
             localDataSource = localDataSource,
-            dispatchers = TestDispatchersProvider(mainDispatcherRule.testDispatcher)
+            dispatchers = TestDispatchersProvider(mainDispatcherRule.dispatcher)
         )
     }
 

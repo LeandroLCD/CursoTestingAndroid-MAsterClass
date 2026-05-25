@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.aristidevs.cursotestingandroid.cart.domain.FailingCartItemRepositoryStub
 import com.aristidevs.cursotestingandroid.cart.domain.repository.CartItemRepository
 import com.aristidevs.cursotestingandroid.cart.domain.usecase.AddToCartUseCase
+import com.aristidevs.cursotestingandroid.core.MainDispatcherRule
 import com.aristidevs.cursotestingandroid.core.builders.product
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError
 import com.aristidevs.cursotestingandroid.core.fakes.FakeCartItemRepository

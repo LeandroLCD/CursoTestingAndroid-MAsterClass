@@ -3,7 +3,6 @@ package com.aristidevs.cursotestingandroid.productlist.data.repository
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError
-import com.aristidevs.cursotestingandroid.core.mockwebserver.MockWebServerUrlHolder
 import com.aristidevs.cursotestingandroid.core.mockwebserver.rules.MockWebServerRule
 import com.aristidevs.cursotestingandroid.core.utils.awaitMatches
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.ProductRepository
@@ -11,7 +10,6 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull

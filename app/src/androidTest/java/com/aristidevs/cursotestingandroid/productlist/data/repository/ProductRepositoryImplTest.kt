@@ -42,7 +42,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_emit_list_from_database_then_products_after_successful_refresh_in_getProducts() = runTest {
         //GIVEN
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
                 .setBody(
@@ -72,7 +72,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_emit_only_empty_list_when_server_returns_404_in_getProducts() = runTest {
         //GIVEN
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse().setResponseCode(404)
         )
 
@@ -87,7 +87,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_emit_only_empty_list_when_server_returns_empty_product_in_getProducts() = runTest {
         //GIVEN
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
                 .setBody(
@@ -106,7 +106,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_filter_products_with_no_category_in_getProducts() = runTest {
         //GIVEN — un producto con categoría válida y otro sin categoría
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
                 .setBody(
@@ -133,7 +133,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_fetch_and_persist_products_from_remote_in_refreshProduct() = runTest {
         //GIVEN
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
                 .setBody(
@@ -159,7 +159,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_throw_NotFoundError_when_server_returns_404_in_refreshProduct() = runTest {
         //GIVEN
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse().setResponseCode(404)
         )
 
@@ -174,7 +174,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_update_product_price_when_refresh_returns_only_product_A_with_increased_price_in_refreshProduct() = runTest {
         //GIVEN
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
                 .setBody(
@@ -187,7 +187,7 @@ class ProductRepositoryImplTest {
         )
         productRepository.refreshProduct()
 
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
                 .setBody(
@@ -213,7 +213,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_throw_NetworkError_when_server_returns_500_in_refreshProduct() = runTest {
         //GIVEN
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse().setResponseCode(500)
         )
 
@@ -230,7 +230,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_emit_product_when_it_exists_in_getProductById() = runTest {
         //GIVEN
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
                 .setBody(
@@ -255,7 +255,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_emit_null_when_product_does_not_exist_in_getProductById() = runTest {
         //GIVEN
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
                 .setBody(
@@ -278,7 +278,7 @@ class ProductRepositoryImplTest {
     @Test
     fun should_emit_products_for_given_ids_in_getProductsByIds() = runTest {
         //GIVEN
-        mockWebServerRule.mockWebServer.enqueue(
+        mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
                 .setBody(

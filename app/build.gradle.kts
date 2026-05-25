@@ -125,4 +125,9 @@ tasks.register("testUnitApp") {
     description = "Ejecuta todos los tests unitarios del módulo app (variante debug)."
     dependsOn("testDebugUnitTest")
 }
+tasks.register("androidTestApp") {
+    group = "verification"
+    description = "Ejecuta todos los android tests del módulo app (variante debug)."
+    dependsOn("connectedDebugAndroidTest")
+}
 

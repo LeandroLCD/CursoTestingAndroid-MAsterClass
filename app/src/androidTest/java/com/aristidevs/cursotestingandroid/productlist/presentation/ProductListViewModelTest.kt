@@ -64,7 +64,7 @@ class ProductListViewModelTest {
 
     @Before
     fun setUp() = runTest{
-        mockWebServer.mockWebServer.dispatcher = MiniMarketApiOkhttpDispatcher(
+        mockWebServer.localServer.dispatcher = MiniMarketApiOkhttpDispatcher(
             "product_list_default.json".asAssets()
         )
         hiltRule.inject()

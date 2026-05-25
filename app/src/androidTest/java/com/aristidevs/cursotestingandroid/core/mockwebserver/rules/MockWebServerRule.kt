@@ -6,16 +6,17 @@ import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 class MockWebServerRule: TestWatcher() {
-    val mockWebServer = MockWebServer()
+    val localServer = MockWebServer()
     override fun starting(description: Description?) {
         super.starting(description)
-        mockWebServer.start(8080)
-        MockWebServerUrlHolder.baseUrl = mockWebServer.url("/").toString()
+        localServer.start()
+        MockWebServerUrlHolder.baseUrl = localServer.url("/").toString()
         println("MockWebServerUrlHolder.baseUrl: ${MockWebServerUrlHolder.baseUrl}")
     }
 
     override fun finished(description: Description?) {
-        mockWebServer.shutdown()
+        localServer.takeRequest()
+        localServer.shutdown()
         MockWebServerUrlHolder.resetUrl()
         super.finished(description)
     }

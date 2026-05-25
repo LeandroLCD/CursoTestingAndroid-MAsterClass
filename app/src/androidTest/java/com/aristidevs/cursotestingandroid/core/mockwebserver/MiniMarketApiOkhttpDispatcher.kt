@@ -20,7 +20,7 @@ class MiniMarketApiOkhttpDispatcher(
                     .setResponseCode(200)
                     .setBody(promotions)
                     .addHeader("Content-Type", "application/json")
-            else -> MockResponse().setResponseCode(404)
+            else -> MockResponse().setResponseCode(404).setBody("Not found")
         }
     }
 }

@@ -13,6 +13,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 @Module
 @TestInstallIn(components = [SingletonComponent::class], replaces = [NetworkModule::class])
@@ -24,6 +26,8 @@ object TestNetworkModule {
     fun provideOkHttpClient(): OkHttpClient{
 
         return OkHttpClient.Builder()
+            .retryOnConnectionFailure(true)
+            .callTimeout(30.seconds)
             .build()
     }
 

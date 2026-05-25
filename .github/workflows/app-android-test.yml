@@ -89,7 +89,7 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           emulator-boot-timeout: 300
-          script: ./gradlew :app:connectedDebugAndroidTest --no-daemon --warning-mode none --console=plain --stacktrace
+          script: ./gradlew :app:androidTestApp --no-daemon --warning-mode none --console=plain --stacktrace
 
       - name: 📊 Publicar resultados de tests
         uses: EnricoMi/publish-unit-test-result-action@v2

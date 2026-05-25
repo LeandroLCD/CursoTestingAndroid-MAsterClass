@@ -15,7 +15,6 @@ class MockWebServerRule: TestWatcher() {
     }
 
     override fun finished(description: Description?) {
-        localServer.takeRequest()
         localServer.shutdown()
         MockWebServerUrlHolder.resetUrl()
         super.finished(description)

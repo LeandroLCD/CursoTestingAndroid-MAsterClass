@@ -9,6 +9,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.aristidevs.cursotestingandroid.cart.data.local.database.dao.CartItemDao
 import com.aristidevs.cursotestingandroid.cart.data.repository.CartItemRepositoryImpl
 import com.aristidevs.cursotestingandroid.cart.domain.repository.CartItemRepository
+import com.aristidevs.cursotestingandroid.core.data.coroutines.DefaultDispatchersProvider
 import com.aristidevs.cursotestingandroid.core.data.local.database.MiniMarketDatabase
 import com.aristidevs.cursotestingandroid.core.data.util.SystemClock
 import com.aristidevs.cursotestingandroid.core.domain.coroutines.DispatchersProvider
@@ -26,9 +27,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import java.io.File
 import java.util.UUID
 import javax.inject.Singleton
@@ -36,16 +34,10 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(components = [SingletonComponent::class], replaces = [DataModule::class])
 object TestDataModule {
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Provides
     @Singleton
-    fun provideDispatchersProvider(): DispatchersProvider {
-        val dispatcher = UnconfinedTestDispatcher()
-        return object : DispatchersProvider {
-            override val main: CoroutineDispatcher = dispatcher
-            override val io: CoroutineDispatcher = dispatcher
-            override val default: CoroutineDispatcher = dispatcher
-        }
+    fun provideDispatchersProvider(defaultDispatchersProvider: DefaultDispatchersProvider): DispatchersProvider {
+        return defaultDispatchersProvider
     }
 
     @Provides
@@ -81,7 +73,7 @@ object TestDataModule {
         return Room.inMemoryDatabaseBuilder(
             context = context,
             klass = MiniMarketDatabase::class.java
-        ).build()
+        ).allowMainThreadQueries().build()
     }
 
     @Provides

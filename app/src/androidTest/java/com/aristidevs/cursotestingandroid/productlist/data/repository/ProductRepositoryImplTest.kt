@@ -3,7 +3,9 @@ package com.aristidevs.cursotestingandroid.productlist.data.repository
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError
+import com.aristidevs.cursotestingandroid.core.mockwebserver.MiniMarketApiOkhttpDispatcher
 import com.aristidevs.cursotestingandroid.core.mockwebserver.rules.MockWebServerRule
+import com.aristidevs.cursotestingandroid.core.utils.TestAssets.asAssets
 import com.aristidevs.cursotestingandroid.core.utils.awaitMatches
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.ProductRepository
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -19,6 +21,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -40,34 +43,35 @@ class ProductRepositoryImplTest {
     // ─── getProducts ─────────────────────────────────────────────────────────────
 
     @Test
-    fun should_emit_list_from_database_then_products_after_successful_refresh_in_getProducts() = runTest {
-        //GIVEN
-        mockWebServerRule.localServer.enqueue(
-            MockResponse()
-                .setResponseCode(200)
-                .setBody(
-                    """{"products":[
+    fun should_emit_list_from_database_then_products_after_successful_refresh_in_getProducts() =
+        runTest {
+            //GIVEN
+            mockWebServerRule.localServer.enqueue(
+                MockResponse()
+                    .setResponseCode(200)
+                    .setBody(
+                        """{"products":[
                         {"id":"1","name":"Apple","category":"food","priceCents":100,"stock":5},
                         {"id":"2","name":"Banana","category":"drinks","priceCents":50,"stock":20}
                     ]}"""
-                )
-        )
+                    )
+            )
 
-        //WHEN & THEN
-        productRepository.getProducts().test {
+            //WHEN & THEN
+            productRepository.getProducts().test {
 
-            val withProducts = awaitMatches{
-                it.isNotEmpty()
+                val withProducts = awaitMatches {
+                    it.isNotEmpty()
+                }
+                assertEquals(2, withProducts.size)
+                assertEquals("1", withProducts[0].id)
+                assertEquals("Apple", withProducts[0].name)
+                assertEquals("2", withProducts[1].id)
+                assertEquals("Banana", withProducts[1].name)
+
+                cancelAndConsumeRemainingEvents()
             }
-            assertEquals(2, withProducts.size)
-            assertEquals("1", withProducts[0].id)
-            assertEquals("Apple", withProducts[0].name)
-            assertEquals("2", withProducts[1].id)
-            assertEquals("Banana", withProducts[1].name)
-
-            cancelAndConsumeRemainingEvents()
         }
-    }
 
     @Test
     fun should_emit_only_empty_list_when_server_returns_404_in_getProducts() = runTest {
@@ -105,7 +109,8 @@ class ProductRepositoryImplTest {
 
     @Test
     fun should_filter_products_with_no_category_in_getProducts() = runTest {
-        //GIVEN — un producto con categoría válida y otro sin categoría
+        //GIVEN
+        //TODO revisar
         mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
@@ -118,7 +123,8 @@ class ProductRepositoryImplTest {
         )
 
         //WHEN & THEN
-        productRepository.getProducts().test {
+        productRepository.refreshProduct()
+        productRepository.getProducts().test(timeout = 6.seconds) {
 
             val withProducts = awaitMatches { it.isNotEmpty() }
             assertEquals(1, withProducts.size)
@@ -172,43 +178,44 @@ class ProductRepositoryImplTest {
     }
 
     @Test
-    fun should_update_product_price_when_refresh_returns_only_product_A_with_increased_price_in_refreshProduct() = runTest {
-        //GIVEN
-        mockWebServerRule.localServer.enqueue(
-            MockResponse()
-                .setResponseCode(200)
-                .setBody(
-                    """{"products":[
+    fun should_update_product_price_when_refresh_returns_only_product_A_with_increased_price_in_refreshProduct() =
+        runTest {
+            //GIVEN
+            mockWebServerRule.localServer.enqueue(
+                MockResponse()
+                    .setResponseCode(200)
+                    .setBody(
+                        """{"products":[
                         {"id":"A","name":"Avocado","category":"fruit","priceCents":150,"stock":3},
                         {"id":"B","name":"Blueberry","category":"fruit","priceCents":300,"stock":15},
                         {"id":"C","name":"Cherry","category":"fruit","priceCents":400,"stock":7}
                     ]}"""
-                )
-        )
-        productRepository.refreshProduct()
+                    )
+            )
+            productRepository.refreshProduct()
 
-        mockWebServerRule.localServer.enqueue(
-            MockResponse()
-                .setResponseCode(200)
-                .setBody(
-                    """{"products":[
+            mockWebServerRule.localServer.enqueue(
+                MockResponse()
+                    .setResponseCode(200)
+                    .setBody(
+                        """{"products":[
                         {"id":"A","name":"Avocado","category":"fruit","priceCents":200,"stock":3}
                     ]}"""
-                )
-        )
+                    )
+            )
 
-        //WHEN
-        productRepository.refreshProduct()
+            //WHEN
+            productRepository.refreshProduct()
 
-        //THEN
-        productRepository.getProductById("A").test {
-            val product = awaitItem()
-            assertNotNull(product)
-            assertEquals("A", product?.id)
-            assertEquals(2.0, product?.price)
-            cancelAndConsumeRemainingEvents()
+            //THEN
+            productRepository.getProductById("A").test {
+                val product = awaitItem()
+                assertNotNull(product)
+                assertEquals("A", product?.id)
+                assertEquals(2.0, product?.price)
+                cancelAndConsumeRemainingEvents()
+            }
         }
-    }
 
     @Test
     fun should_throw_NetworkError_when_server_returns_500_in_refreshProduct() = runTest {

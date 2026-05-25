@@ -43,6 +43,7 @@ class ProductRepositoryImpl @Inject constructor(
                 }
             }
             .catch {
+                it.printStackTrace()
                 //Log importante
             }
 

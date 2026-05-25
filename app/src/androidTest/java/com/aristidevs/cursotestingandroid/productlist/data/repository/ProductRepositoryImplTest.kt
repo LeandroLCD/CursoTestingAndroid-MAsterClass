@@ -3,9 +3,7 @@ package com.aristidevs.cursotestingandroid.productlist.data.repository
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import com.aristidevs.cursotestingandroid.core.domain.model.AppError
-import com.aristidevs.cursotestingandroid.core.mockwebserver.MiniMarketApiOkhttpDispatcher
 import com.aristidevs.cursotestingandroid.core.mockwebserver.rules.MockWebServerRule
-import com.aristidevs.cursotestingandroid.core.utils.TestAssets.asAssets
 import com.aristidevs.cursotestingandroid.core.utils.awaitMatches
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.ProductRepository
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -110,7 +108,6 @@ class ProductRepositoryImplTest {
     @Test
     fun should_filter_products_with_no_category_in_getProducts() = runTest {
         //GIVEN
-        //TODO revisar
         mockWebServerRule.localServer.enqueue(
             MockResponse()
                 .setResponseCode(200)

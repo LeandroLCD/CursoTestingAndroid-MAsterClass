@@ -5,11 +5,13 @@ on:
     branches: [ develop ]
     paths:
       - 'app/scr/main/**'
+      - 'app/scr/test/**'
       - '.github/workflows/app-unit-test.yml'
   pull_request:
     branches: [ develop, master ]
     paths:
       - 'app/scr/main/**'
+      - 'app/scr/test/**'
       - '.github/**'
 
 # Optimizaciones de concurrencia
@@ -67,7 +69,7 @@ jobs:
 
       - name: 🧪 Ejecutar tests unitarios
         run: |
-          ./gradlew :app:testDebugUnitTest \
+          ./gradlew :app:testUnitApp \
             --parallel \
             --build-cache \
             --configuration-cache \

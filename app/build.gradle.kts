@@ -119,3 +119,10 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
+
+tasks.register("testUnitApp") {
+    group = "verification"
+    description = "Ejecuta todos los tests unitarios del módulo app (variante debug)."
+    dependsOn("testDebugUnitTest")
+}
+

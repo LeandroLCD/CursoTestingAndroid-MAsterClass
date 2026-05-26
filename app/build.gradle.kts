@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -11,9 +9,7 @@ plugins {
 
 android {
     namespace = "com.aristidevs.cursotestingandroid"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.aristidevs.cursotestingandroid"
@@ -22,7 +18,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.aristidevs.cursotestingandroid.HiltTestRunner"
     }
 
     buildTypes {
@@ -48,11 +44,8 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
-kotlin{
-    compilerOptions{
-        jvmTarget = JvmTarget.JVM_17
-        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
-    }
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
@@ -112,6 +105,13 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
+    testImplementation(libs.mockwebserver)
+    androidTestImplementation(libs.turbine)
+    androidTestImplementation(libs.mockwebserver)
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -119,3 +119,15 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
+
+tasks.register("testUnitApp") {
+    group = "verification"
+    description = "Ejecuta todos los tests unitarios del módulo app (variante debug)."
+    dependsOn("testDebugUnitTest")
+}
+tasks.register("androidTestApp") {
+    group = "verification"
+    description = "Ejecuta todos los android tests del módulo app (variante debug)."
+    dependsOn("connectedDebugAndroidTest")
+}
+

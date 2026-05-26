@@ -1,0 +1,11 @@
+{
+  "promotions": [
+    {
+      "id": "p1",
+      "productId": "1",
+      "type": "PERCENT",
+      "percent": 20
+    }
+  ]
+}
+

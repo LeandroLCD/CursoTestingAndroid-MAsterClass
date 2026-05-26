@@ -126,10 +126,6 @@ app/src/test/java/com/package/feature/domain/usecase/builder/
 ### Builder Structure:
 
 ```kotlin
-package com.aristidevs.cursotestingandroid.cart.domain.usecase.builder
-
-import com.aristidevs.cursotestingandroid.cart.domain.model.CartItem
-
 class CartItemBuilder {
     private var productId: String = "product-1"
     private var quantity: Int = 2
@@ -181,21 +177,6 @@ val cartItem = cartItem {
 ## 5. Complete Test Example
 
 ```kotlin
-package com.aristidevs.cursotestingandroid.cart.domain.usecase
-
-import com.aristidevs.cursotestingandroid.cart.domain.repository.CartItemRepository
-import com.aristidevs.cursotestingandroid.cart.domain.usecase.builder.productBuilder
-import com.aristidevs.cursotestingandroid.core.domain.model.AppError
-import com.aristidevs.cursotestingandroid.productlist.domain.repository.ProductRepository
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-
 class UpdateCartItemUseCaseTest {
 
     private lateinit var cartItemRepository: CartItemRepository
@@ -267,6 +248,7 @@ class UpdateCartItemUseCaseTest {
 - Use `runTest` for tests with coroutines
 
 ❌ **DON'T:**
+- Never include comments in the code
 - Use backticks in test names
 - Use `assertThrows` (prefer `runCatching`)
 - Create objects manually in each test

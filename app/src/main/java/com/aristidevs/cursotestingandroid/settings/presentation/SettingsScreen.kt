@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aristidevs.cursotestingandroid.R
 import com.aristidevs.cursotestingandroid.core.domain.model.ThemeMode
 import com.aristidevs.cursotestingandroid.core.presentation.components.MarketTopAppBar
+import com.aristidevs.cursotestingandroid.ui.utils.testTagRes
 
 @Composable
 fun SettingsScreen(
@@ -45,6 +46,22 @@ fun SettingsScreen(
 
     val uiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
 
+    SettingScreenContent(
+        uiState = uiState,
+        setThemeModeChanged = { settingsViewModel.setThemeMode(it) },
+        setInStockOnlyChanged = { settingsViewModel.setInStockOnly(it) },
+        onBack = onBack
+    )
+
+}
+
+@Composable
+fun SettingScreenContent(
+    uiState: SettingsUiState = SettingsUiState(),
+    setThemeModeChanged: (ThemeMode) -> Unit= {},
+    setInStockOnlyChanged: (Boolean) -> Unit = {},
+    onBack: () -> Unit = {}
+){
     Scaffold(
         topBar = {
             MarketTopAppBar(
@@ -53,6 +70,7 @@ fun SettingsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .testTagRes(R.id.setting_screen_content)
                 .padding(paddingValues)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -109,8 +127,9 @@ fun SettingsScreen(
 
                         Switch(
                             checked = uiState.inStockOnly,
+                            modifier = Modifier.testTagRes(R.id.in_stock_only_switch),
                             onCheckedChange = { newState ->
-                                settingsViewModel.setInStockOnly(
+                                setInStockOnlyChanged(
                                     newState
                                 )
                             }
@@ -140,7 +159,8 @@ fun SettingsScreen(
                         }
 
                         Switch(
-                            checked = true,
+                            checked = uiState.showTaxes,
+                            modifier = Modifier.testTagRes(R.id.show_taxes_switch),
                             onCheckedChange = {}
                         )
                     }
@@ -197,19 +217,22 @@ fun SettingsScreen(
                         ) {
                             SegmentedButton(
                                 shape = SegmentedButtonDefaults.itemShape(0, 3),
-                                onClick = { settingsViewModel.setThemeMode(ThemeMode.SYSTEM) },
+                                modifier = Modifier.testTagRes(R.id.setting_theme, ThemeMode.SYSTEM.id),
+                                onClick = { setThemeModeChanged(ThemeMode.SYSTEM) },
                                 selected = uiState.themeMode == ThemeMode.SYSTEM,
                                 label = { Text(stringResource(R.string.settings_theme_system)) }
                             )
                             SegmentedButton(
                                 shape = SegmentedButtonDefaults.itemShape(1, 3),
-                                onClick = { settingsViewModel.setThemeMode(ThemeMode.LIGHT) },
+                                modifier = Modifier.testTagRes(R.id.setting_theme, ThemeMode.LIGHT.id),
+                                onClick = { setThemeModeChanged(ThemeMode.LIGHT) },
                                 selected = uiState.themeMode == ThemeMode.LIGHT,
                                 label = { Text(stringResource(R.string.settings_theme_light)) }
                             )
                             SegmentedButton(
                                 shape = SegmentedButtonDefaults.itemShape(2, 3),
-                                onClick = { settingsViewModel.setThemeMode(ThemeMode.DARK) },
+                                modifier = Modifier.testTagRes(R.id.setting_theme, ThemeMode.DARK.id),
+                                onClick = { setThemeModeChanged(ThemeMode.DARK) },
                                 selected = uiState.themeMode == ThemeMode.DARK,
                                 label = { Text(stringResource(R.string.settings_theme_dark)) }
                             )
@@ -220,5 +243,4 @@ fun SettingsScreen(
             }
         }
     }
-
 }

@@ -1,0 +1,160 @@
+name: App Android Test Instrumented
+
+on:
+  push:
+    tags:
+      - 'v*'          # Se ejecuta al crear cualquier tag de release (ej: v1.0.0, v2.3.1)
+  pull_request:
+    branches:
+      - master        # Se ejecuta en PRs hacia master (validación previa a release)
+    paths:
+      - 'app/src/main/**'
+      - 'app/src/androidTest/**'
+      - '.github/workflows/app-android-test.yml'
+  workflow_dispatch:  # Permite ejecución manual desde la UI de GitHub
+
+# Optimizaciones de concurrencia
+# En PRs se cancela si se hace un nuevo push; en tags/release no se interrumpe
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  android-test:
+    name: 🚀 Tests Instrumentados Release ${{ github.ref_name }} (API 36 - Android 16)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    permissions:
+      contents: read        # Leer el repositorio
+      checks: write         # Crear check-runs
+      pull-requests: write  # Publicar comentarios en Pull Requests
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🔧 Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: ☕ Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 🐘 Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: 📱 AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-app-36-google_apis-${{ github.ref_name }}
+
+      - name: 🏗️ Crear AVD y generar snapshot para cache
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          emulator-boot-timeout: 300
+          script: echo "✅ AVD snapshot generado para cache (API 36 - Android 16)"
+
+      - name: 🔧 Hacer gradlew ejecutable y configurar CI
+        run: |
+          chmod +x ./gradlew
+          cp gradle-ci.properties gradle.properties || true
+          echo "GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true" >> $GITHUB_ENV
+
+      - name: 🧪 Ejecutar tests instrumentados (API 36 - Android 16)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          emulator-boot-timeout: 300
+          script: ./gradlew :app:connectedDebugAndroidTest --no-daemon --warning-mode none --console=plain --stacktrace
+
+      - name: 📊 Publicar resultados de tests
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            app/build/outputs/androidTest-results/**/*.xml
+          check_name: 📋 Resultados Tests Instrumentados - API 36
+          comment_title: 🧪 Reporte Tests Instrumentados (API 36 - Android 16)
+          comment_mode: always
+
+      - name: 📄 Subir reporte HTML
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: app-android-test-report-api36-${{ github.ref_name }}-${{ github.run_number }}
+          path: app/build/reports/androidTests/connected/
+          retention-days: 30
+          compression-level: 6
+
+      - name: ✅ Tests completados exitosamente
+        if: success()
+        run: |
+          echo "🎉 ¡Todos los tests instrumentados pasaron exitosamente!"
+          echo "📊 Revisa el reporte detallado en los artefactos"
+
+      - name: ❌ Tests fallidos
+        if: failure()
+        run: |
+          echo "⚠️  Algunos tests instrumentados fallaron"
+          echo "📋 Revisa el reporte para más detalles"
+          exit 1
+
+      - name: 🧹 Limpiar archivos temporales
+        if: always()
+        run: |
+          echo "🧹 Limpiando archivos temporales..."
+          rm -rf ~/.gradle/caches/modules-2/modules-2.lock
+          rm -rf ~/.gradle/caches/*/plugin-resolution/
+          rm -rf ~/.gradle/daemon/
+          echo "✨ Limpieza completada"
+
+      - name: 📊 Reporte de uso de espacio
+        if: always()
+        run: |
+          echo "📊 Espacio en disco utilizado:"
+          du -sh app/build 2>/dev/null || echo "No build directory"
+          du -sh ~/.gradle/caches 2>/dev/null || echo "No gradle cache"
+          echo ""
+          echo "💾 Espacio total disponible:"
+          df -h / | tail -1
+
+      - name: 🏁 Finalización del workflow
+        if: always()
+        run: |
+          echo "=================================="
+          echo "🏁 App Android Test Release ${{ github.ref_name }} (API 36 - Android 16) finalizado"
+          echo "=================================="
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Estado: ÉXITO"
+            echo "🎉 Todos los tests pasaron correctamente"
+          else
+            echo "❌ Estado: FALLIDO"
+            echo "⚠️  Se encontraron problemas en los tests"
+          fi
+          echo "📅 Ejecutado: $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "=================================="
+

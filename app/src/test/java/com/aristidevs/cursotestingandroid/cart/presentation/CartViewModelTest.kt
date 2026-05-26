@@ -13,6 +13,7 @@ import com.aristidevs.cursotestingandroid.core.fakes.FakeCartItemRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakeProductRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakePromotionRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakeSystemClock
+import com.aristidevs.cursotestingandroid.core.utils.awaitMatches
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.ProductRepository
 import com.aristidevs.cursotestingandroid.productlist.domain.repository.PromotionRepository
 import com.aristidevs.cursotestingandroid.productlist.domain.usecase.GetPromotionForProduct
@@ -119,7 +120,7 @@ class CartViewModelTest {
 
                 viewModel.increaseQuantity(productId, 5)
 
-                val event = awaitItem()
+                val event = awaitMatches { it is CartEvent.ShowMessage }
                 assertTrue(event is CartEvent.ShowMessage)
                 cancelAndIgnoreRemainingEvents()
             }

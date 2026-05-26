@@ -1,0 +1,165 @@
+name: App Unit Test
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - 'app/scr/main/**'
+      - 'app/scr/test/**'
+      - '.github/workflows/app-unit-test.yml'
+  pull_request:
+    branches: [ develop, master ]
+    paths:
+      - 'app/scr/main/**'
+      - 'app/scr/test/**'
+      - '.github/**'
+
+# Optimizaciones de concurrencia
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: 🧪 Tests Unitarios
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: read        # Leer el repositorio
+      checks: write         # Crear check-runs (requerido por publish-unit-test-result-action)
+      pull-requests: write  # Publicar comentarios en Pull Requests
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # Solo último commit para ser más rápido
+
+      - name: ☕ Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
+
+      - name: 📦 Restore Gradle cache
+        id: gradle-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: 🗑️ Delete stale cache
+        if: steps.gradle-cache.outputs.cache-hit != 'true' && steps.gradle-cache.outputs.cache-matched-key != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "⚠️ Cache obsoleto detectado: ${{ steps.gradle-cache.outputs.cache-matched-key }}"
+          echo "🗑️ Eliminando cache antiguo para liberar espacio..."
+          gh cache delete "${{ steps.gradle-cache.outputs.cache-matched-key }}" --repo ${{ github.repository }} || true
+          echo "✅ Cache obsoleto eliminado"
+
+      - name: 🔧 Hacer gradlew ejecutable y configurar CI
+        run: |
+          chmod +x ./gradlew
+          # Usar propiedades optimizadas para CI
+          cp gradle-ci.properties gradle.properties || true
+          # Configurar variables de entorno para Gradle
+          echo "GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true" >> $GITHUB_ENV
+
+      - name: 🧪 Ejecutar tests unitarios
+        run: |
+          ./gradlew :app:testUnitApp \
+            --parallel \
+            --build-cache \
+            --configuration-cache \
+            --no-daemon \
+            --warning-mode none \
+            --console=plain \
+            --stacktrace
+        continue-on-error: false
+
+      - name: 📊 Publicar resultados de tests
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            app/build/test-results/**/*.xml
+          check_name: 📋 Resultados de Tests
+          comment_title: 🧪 Reporte de Tests Unitarios
+          comment_mode: always
+
+      - name: 📄 Subir reporte HTML
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-report-html-${{ github.run_number }}
+          path: app/build/reports/tests/testDebugUnitTest/
+          retention-days: 30
+          compression-level: 6
+
+      - name: ✅ Tests completados exitosamente
+        if: success()
+        run: |
+          echo "🎉 ¡Todos los tests pasaron exitosamente!"
+          echo "📊 Revisa el reporte detallado en los artefactos"
+
+      - name: ❌ Tests fallidos
+        if: failure()
+        run: |
+          echo "⚠️  Algunos tests fallaron"
+          echo "📋 Revisa el reporte para más detalles"
+          exit 1
+
+      - name: 🧹 Limpiar archivos temporales.
+        if: always()
+        run: |
+          echo "🧹 Limpiando archivos temporales..."
+          # Limpiar solo lo necesario para liberar espacio
+          rm -rf ~/.gradle/caches/modules-2/modules-2.lock
+          rm -rf ~/.gradle/caches/*/plugin-resolution/
+          rm -rf ~/.gradle/daemon/
+          echo "✨ Limpieza de archivos temporales completada"
+
+      - name: 💾 Guardar cache de Gradle
+        if: steps.gradle-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: 📊 Reporte de uso de espacio
+        if: always()
+        run: |
+          echo "📊 Espacio en disco utilizado:"
+          du -sh app/build 2>/dev/null || echo "No build directory"
+          du -sh ~/.gradle/caches 2>/dev/null || echo "No gradle cache"
+          echo ""
+          echo "💾 Espacio total disponible:"
+          df -h / | tail -1
+
+      - name: 🏁 Finalización del workflow
+        if: always()
+        run: |
+          echo "=================================="
+          echo "🏁 Workflow App Unit Test finalizado"
+          echo "=================================="
+          echo ""
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Estado: ÉXITO"
+            echo "🎉 Todos los tests pasaron correctamente"
+          else
+            echo "❌ Estado: FALLIDO"
+            echo "⚠️  Se encontraron problemas en los tests"
+          fi
+          echo ""
+          echo "📅 Ejecutado: $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "=================================="
+

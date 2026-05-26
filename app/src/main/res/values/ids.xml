@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="setting_screen_content" type="id"/>
+    <item name="in_stock_only_switch" type="id"/>
+    <item name="show_taxes_switch" type="id"/>
+    <item name="setting_theme" type="id"/>
+    <item name="top_bar_back_navigation_icon" type="id" />
+</resources>

@@ -18,13 +18,14 @@ import androidx.compose.ui.platform.testTag
  */
 @SuppressLint("LocalContextResourcesRead", "LocalContextGetResourceValueCall")
 @Composable
-fun Modifier.testTagRes(@IdRes id: Int) = apply {
-    testTag(LocalResources.current.getResourceEntryName(id))
+fun Modifier.testTagRes(@IdRes id: Int): Modifier {
+    val tag = LocalResources.current.getResourceEntryName(id)
+    return testTag(tag)
 }
 
 @SuppressLint("LocalContextResourcesRead", "LocalContextGetResourceValueCall")
 @Composable
-fun Modifier.testTagRes(@IdRes id: Int, vararg formatArgs: Any?, separator: Char = '_') = apply {
+fun Modifier.testTagRes(@IdRes id: Int, vararg formatArgs: Any?, separator: Char = '_'): Modifier {
     val tag = LocalResources.current.getResourceEntryName(id)
-    testTag(tag.plus(separator).plus(formatArgs.joinToString(separator = separator.toString())))
+    return testTag(tag.plus(separator).plus(formatArgs.joinToString(separator = separator.toString())))
 }

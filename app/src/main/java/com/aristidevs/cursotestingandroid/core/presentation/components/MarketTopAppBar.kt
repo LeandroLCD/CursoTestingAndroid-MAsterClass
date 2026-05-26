@@ -12,6 +12,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import com.aristidevs.cursotestingandroid.R
+import com.aristidevs.cursotestingandroid.ui.utils.testTagRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,7 +26,10 @@ fun MarketTopAppBar(modifier: Modifier = Modifier, title: String, onBackSelected
                 title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold
             )
         }, navigationIcon = {
-            IconButton(onClick = { onBackSelected() }) {
+            IconButton(
+                modifier = modifier.testTagRes(R.id.top_bar_back_navigation_icon),
+                onClick = { onBackSelected() }
+            ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "back",

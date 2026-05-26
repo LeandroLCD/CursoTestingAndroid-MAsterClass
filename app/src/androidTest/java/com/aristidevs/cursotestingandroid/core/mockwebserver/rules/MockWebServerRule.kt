@@ -5,13 +5,12 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
-class MockWebServerRule: TestWatcher() {
+class MockWebServerRule : TestWatcher() {
     val localServer = MockWebServer()
     override fun starting(description: Description?) {
         super.starting(description)
         localServer.start()
         MockWebServerUrlHolder.baseUrl = localServer.url("/").toString()
-        println("MockWebServerUrlHolder.baseUrl: ${MockWebServerUrlHolder.baseUrl}")
     }
 
     override fun finished(description: Description?) {

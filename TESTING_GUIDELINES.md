@@ -126,10 +126,6 @@ app/src/test/java/com/package/feature/domain/usecase/builder/
 ### Builder Structure:
 
 ```kotlin
-package com.aristidevs.cursotestingandroid.cart.domain.usecase.builder
-
-import com.aristidevs.cursotestingandroid.cart.domain.model.CartItem
-
 class CartItemBuilder {
     private var productId: String = "product-1"
     private var quantity: Int = 2
@@ -267,6 +263,7 @@ class UpdateCartItemUseCaseTest {
 - Use `runTest` for tests with coroutines
 
 ❌ **DON'T:**
+- Never include comments in the code
 - Use backticks in test names
 - Use `assertThrows` (prefer `runCatching`)
 - Create objects manually in each test

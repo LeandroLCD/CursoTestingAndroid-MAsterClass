@@ -4,14 +4,14 @@ on:
   push:
     branches: [ develop ]
     paths:
-      - 'app/scr/main/**'
-      - 'app/scr/androidTest/**'
+      - 'app/src/main/**'
+      - 'app/src/androidTest/**'
       - '.github/workflows/app-android-test.yml'
   pull_request:
     branches: [ develop, master ]
     paths:
-      - 'app/scr/main/**'
-      - 'app/scr/androidTest/**'
+      - 'app/src/main/**'
+      - 'app/src/androidTest/**'
       - '.github/workflows/app-android-test.yml'
 
 # Optimizaciones de concurrencia

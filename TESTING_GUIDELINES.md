@@ -177,21 +177,6 @@ val cartItem = cartItem {
 ## 5. Complete Test Example
 
 ```kotlin
-package com.aristidevs.cursotestingandroid.cart.domain.usecase
-
-import com.aristidevs.cursotestingandroid.cart.domain.repository.CartItemRepository
-import com.aristidevs.cursotestingandroid.cart.domain.usecase.builder.productBuilder
-import com.aristidevs.cursotestingandroid.core.domain.model.AppError
-import com.aristidevs.cursotestingandroid.productlist.domain.repository.ProductRepository
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-
 class UpdateCartItemUseCaseTest {
 
     private lateinit var cartItemRepository: CartItemRepository

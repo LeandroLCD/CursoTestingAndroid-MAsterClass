@@ -15,8 +15,6 @@ import org.junit.Test
 
 class SettingsScreenTest : BaseComposeTest() {
 
-
-
     private fun renderContentScreen(
         uiState: SettingsUiState = SettingsUiState(),
         setThemeModeChanged: (ThemeMode) -> Unit = {},
@@ -150,7 +148,6 @@ class SettingsScreenTest : BaseComposeTest() {
 
         //THEN
         assertTrue(themeModeExpected == ThemeMode.DARK)
-
     }
 
 }

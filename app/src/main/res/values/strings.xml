@@ -34,5 +34,5 @@
     <string name="sort_price_asc">Precio ↑</string>
     <string name="sort_price_desc">Precio ↓</string>
     <string name="sort_discount">Descuento</string>
-    <string name="cart_iten_count_max">99+</string>
+    <string name="cart_iten_count_max" translatable="false">99+</string>
 </resources>

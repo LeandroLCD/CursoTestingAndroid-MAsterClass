@@ -33,6 +33,7 @@ import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductPromot
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductWithPromotion
 import com.aristidevs.cursotestingandroid.ui.utils.testTagRes
 import java.util.Locale
+import androidx.compose.ui.platform.LocalLocale
 
 @Composable
 fun ProductItem(item: ProductWithPromotion, onClick: (ProductWithPromotion) -> Unit) {
@@ -144,7 +145,7 @@ fun ProductItem(item: ProductWithPromotion, onClick: (ProductWithPromotion) -> U
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Text(
-                                    String.format(Locale.getDefault(), "%.2f", product.price),
+                                    String.format(LocalLocale.current.platformLocale, "%.2f", product.price),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     textDecoration = TextDecoration.LineThrough
@@ -161,7 +162,7 @@ fun ProductItem(item: ProductWithPromotion, onClick: (ProductWithPromotion) -> U
                                 )
                                 Text(
                                     String.format(
-                                        Locale.getDefault(),
+                                        LocalLocale.current.platformLocale,
                                         "%.2f",
                                         promotion.discountedPrice
                                     ),
@@ -173,7 +174,7 @@ fun ProductItem(item: ProductWithPromotion, onClick: (ProductWithPromotion) -> U
                         }
                     } else {
                         Text(
-                            text = String.format(Locale.getDefault(), "%.2f", product.price),
+                            text = String.format(LocalLocale.current.platformLocale, "%.2f", product.price),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold

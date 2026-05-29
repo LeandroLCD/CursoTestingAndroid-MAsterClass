@@ -29,5 +29,11 @@
     <string name="settings_theme_dark">Scuro</string>
     <string name="database_error">Errore critico nel database.</string>
     <string name="quantity_must_be_positive_error">La quantità deve essere positiva</string>
+    <string name="category">Categorie</string>
+    <string name="all">Tutte</string>
+    <string name="sort_by">Ordina per</string>
+    <string name="sort_price_asc">Prezzo ↑</string>
+    <string name="sort_price_desc">Prezzo ↓</string>
+    <string name="sort_discount">Sconto</string>
 </resources>
 

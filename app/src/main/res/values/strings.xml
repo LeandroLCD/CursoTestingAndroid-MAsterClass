@@ -28,4 +28,11 @@
     <string name="settings_theme_dark">Oscuro</string>
     <string name="database_error">Error crítico en la base de datos.</string>
     <string name="quantity_must_be_positive_error">La cantidad debe ser positiva</string>
+    <string name="category">Categorías</string>
+    <string name="all">Todas</string>
+    <string name="sort_by">Ordenar por</string>
+    <string name="sort_price_asc">Precio ↑</string>
+    <string name="sort_price_desc">Precio ↓</string>
+    <string name="sort_discount">Descuento</string>
+    <string name="cart_iten_count_max">99+</string>
 </resources>

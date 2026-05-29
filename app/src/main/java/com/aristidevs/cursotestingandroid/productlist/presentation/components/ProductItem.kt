@@ -27,9 +27,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.aristidevs.cursotestingandroid.R
 import com.aristidevs.cursotestingandroid.productlist.domain.model.Product
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductPromotion
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductWithPromotion
+import com.aristidevs.cursotestingandroid.ui.utils.testTagRes
 import java.util.Locale
 
 @Composable
@@ -47,6 +49,7 @@ fun ProductItem(item: ProductWithPromotion, onClick: (ProductWithPromotion) -> U
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .testTagRes(R.id.product_item, item.product.id)
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             .clickable { onClick(item) },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),

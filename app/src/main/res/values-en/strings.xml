@@ -29,5 +29,11 @@
     <string name="settings_theme_dark">Dark</string>
     <string name="database_error">Critical database error.</string>
     <string name="quantity_must_be_positive_error">Quantity must be positive</string>
+    <string name="category">Categories</string>
+    <string name="all">All</string>
+    <string name="sort_by">Sort by</string>
+    <string name="sort_price_asc">Price ↑</string>
+    <string name="sort_price_desc">Price ↓</string>
+    <string name="sort_discount">Discount</string>
 </resources>
 

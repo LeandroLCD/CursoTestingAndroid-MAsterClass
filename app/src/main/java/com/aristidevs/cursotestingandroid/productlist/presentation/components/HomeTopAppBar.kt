@@ -16,9 +16,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
+import com.aristidevs.cursotestingandroid.R
+import com.aristidevs.cursotestingandroid.ui.utils.testTagRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,14 +40,20 @@ fun HomeTopAppBar(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ), actions = {
-            IconButton(onClick = { onFiltersSelected(!filtersVisible) }) {
+            IconButton(
+                modifier = Modifier.testTagRes(R.id.top_app_bar_filter_button),
+                onClick = { onFiltersSelected(!filtersVisible) }
+            ) {
                 Icon(
                     imageVector = Icons.Default.FilterList,
                     contentDescription = if (filtersVisible) "Ocultar filtros" else "Mostrar filtros",
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-            IconButton(onClick = { onSettingsSelected() }) {
+            IconButton(
+                modifier = Modifier.testTagRes(R.id.top_app_bar_settings_button),
+                onClick = { onSettingsSelected() }
+            ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = null,
@@ -54,16 +62,19 @@ fun HomeTopAppBar(
             }
             BadgedBox(modifier = Modifier.padding(end = 4.dp), badge = {
                 if (cartItemCount > 0) {
-                    Badge {
+                    Badge(Modifier.testTagRes(R.id.top_app_bar_badge)) {
                         Text(
-                            if (cartItemCount > 99) "99+" else cartItemCount.toString(),
+                            if (cartItemCount > 99) stringResource(R.string.cart_iten_count_max) else cartItemCount.toString(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = Bold
                         )
                     }
                 }
             }) {
-                IconButton(onClick = { onCartSelected() }) {
+                IconButton(
+                    modifier = Modifier.testTagRes(R.id.top_app_bar_cart_button),
+                    onClick = { onCartSelected() }
+                ) {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = null,

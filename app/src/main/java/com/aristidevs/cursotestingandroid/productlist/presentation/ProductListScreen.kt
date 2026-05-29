@@ -1,5 +1,6 @@
 package com.aristidevs.cursotestingandroid.productlist.presentation
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -30,9 +31,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aristidevs.cursotestingandroid.R
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductWithPromotion
+import com.aristidevs.cursotestingandroid.productlist.domain.model.SortOption
 import com.aristidevs.cursotestingandroid.productlist.presentation.components.FiltersMenu
 import com.aristidevs.cursotestingandroid.productlist.presentation.components.HomeTopAppBar
 import com.aristidevs.cursotestingandroid.productlist.presentation.components.ProductItem
+import com.aristidevs.cursotestingandroid.ui.utils.testTagRes
 
 @Composable
 fun ProductListScreen(
@@ -58,20 +61,44 @@ fun ProductListScreen(
 
     val cartItemCount by productListViewModel.cartItemCount.collectAsStateWithLifecycle()
 
+    ProductListScreenContent(
+        uiState = uiState,
+        filterVisible = filterVisible,
+        cartItemCount = cartItemCount,
+        snackbarHostState = snackbarHostState,
+        navigateToSettings = navigateToSettings,
+        navigateToProductDetail = navigateToProductDetail,
+        navigateToCart = navigateToCart,
+        setFilterVisible = { showFilters ->
+            productListViewModel.setFilterVisible(
+                showFilters
+            )
+        }
+    )
+}
 
+@Composable
+fun ProductListScreenContent(
+    uiState: ProductListUiState,
+    snackbarHostState: SnackbarHostState,
+    filterVisible: Boolean,
+    cartItemCount: Int,
+    navigateToSettings: () -> Unit = {},
+    navigateToProductDetail: (String) -> Unit = {},
+    navigateToCart: () -> Unit = {},
+    setFilterVisible: (Boolean) -> Unit = {},
+    onCategorySelected: (String?) -> Unit = {},
+    onSortSelected: (SortOption) -> Unit = {}
+) {
     Scaffold(topBar = {
         HomeTopAppBar(
             filtersVisible = filterVisible,
             cartItemCount = cartItemCount,
-            onFiltersSelected = { showFilters ->
-                productListViewModel.setFilterVisible(
-                    showFilters
-                )
-            },
+            onFiltersSelected = setFilterVisible,
             onSettingsSelected = { navigateToSettings() },
             onCartSelected = { navigateToCart() })
     }, snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValue ->
-        when (val state = uiState) {
+        when (uiState) {
             is ProductListUiState.Loading -> {
                 Box(
                     Modifier
@@ -79,7 +106,7 @@ fun ProductListScreen(
                         .padding(paddingValue),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(Modifier.testTagRes(R.id.loading_progress_indicator))
                 }
             }
 
@@ -90,11 +117,19 @@ fun ProductListScreen(
                         .padding(paddingValue),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        stringResource(R.string.error),
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.error
-                    )
+                    Column {
+                        Text(
+                            stringResource(R.string.error),
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Text(
+                            uiState.message,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error
+                        )
+
+                    }
                 }
             }
 
@@ -109,48 +144,48 @@ fun ProductListScreen(
                         enter = expandVertically() + fadeIn(),
                         exit = shrinkVertically() + fadeOut()
                     ) {
-                        FiltersMenu(state = state, onCategorySelected = { category ->
-                            productListViewModel.setCategory(
-                                category
-                            )
-                        }, onSortSelected = { sortOption ->
-                            productListViewModel.setSortOption(
-                                sortOption
-                            )
-                        })
+                        FiltersMenu(
+                            state = uiState,
+                            onCategorySelected = onCategorySelected,
+                            onSortSelected = onSortSelected
+                        )
                     }
 
                     Text(
-                        stringResource(R.string.products, state.products.size),
+                        stringResource(R.string.products, uiState.products.size),
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.secondary
                     )
-                    if (state.products.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(32.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
+
+
+                    AnimatedContent(uiState.products.isEmpty()){ targetState->
+                        if (targetState){
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(32.dp),
+                                contentAlignment = Alignment.Center
                             ) {
-                                Text("🔍", style = MaterialTheme.typography.displayMedium)
-                                Text(
-                                    stringResource(R.string.products_not_found),
-                                    style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text("🔍", style = MaterialTheme.typography.displayMedium)
+                                    Text(
+                                        stringResource(R.string.products_not_found),
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
                             }
-                        }
-                    } else {
-                        LazyColumn {
-                            items(state.products) { item: ProductWithPromotion ->
-                                ProductItem(
-                                    item = item,
-                                    onClick = { navigateToProductDetail(it.product.id) })
+                        }else{
+                            LazyColumn(Modifier.testTagRes(R.id.product_list_lazy)) {
+                                items(uiState.products) { item: ProductWithPromotion ->
+                                    ProductItem(
+                                        item = item,
+                                        onClick = { navigateToProductDetail(it.product.id) })
+                                }
                             }
                         }
                     }

@@ -5,4 +5,13 @@
     <item name="show_taxes_switch" type="id"/>
     <item name="setting_theme" type="id"/>
     <item name="top_bar_back_navigation_icon" type="id" />
+    <item name="loading_progress_indicator" type="id" />
+    <item name="filter_menu" type="id" />
+    <item name="product_item" type="id" />
+    <item name="product_list_lazy" type="id" />
+    <item name="category" type="id" />
+    <item name="top_app_bar_badge" type="id" />
+    <item name="top_app_bar_filter_button" type="id" />
+    <item name="top_app_bar_settings_button" type="id" />
+    <item name="top_app_bar_cart_button" type="id" />
 </resources>

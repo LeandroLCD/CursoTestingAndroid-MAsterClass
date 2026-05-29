@@ -1,4 +1,4 @@
-package com.aristidevs.cursotestingandroid.core.builders
+package com.aristidevs.cursotestingandroid.core.builder
 
 import com.aristidevs.cursotestingandroid.productlist.domain.model.Promotion
 import com.aristidevs.cursotestingandroid.productlist.domain.model.PromotionType

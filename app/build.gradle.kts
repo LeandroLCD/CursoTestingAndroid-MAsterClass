@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -37,6 +39,10 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    testFixtures {
+        enable = true
+        androidResources = true
     }
 }
 
@@ -118,6 +124,11 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Test Fixtures
+    testFixturesImplementation(platform(libs.androidx.compose.bom))
+    testFixturesImplementation(libs.androidx.compose.ui)
+    testFixturesImplementation(libs.androidx.compose.runtime)
 }
 
 tasks.register("testUnitApp") {
@@ -130,4 +141,3 @@ tasks.register("androidTestApp") {
     description = "Ejecuta todos los android tests del módulo app (variante debug)."
     dependsOn("connectedDebugAndroidTest")
 }
-

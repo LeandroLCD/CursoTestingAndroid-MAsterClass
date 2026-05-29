@@ -5,6 +5,9 @@ import android.content.res.Resources
 import androidx.activity.ComponentActivity
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Rule
@@ -19,10 +22,14 @@ abstract class BaseComposeTest {
 
     protected fun stringResources(@StringRes id: Int) = resources?.getString(id) ?: throw IllegalStateException("Resources not found")
 
+    protected fun stringResources(@StringRes id: Int,vararg formatArgs: Any?) = resources?.getString(id, *formatArgs) ?: throw IllegalStateException("Resources not found")
+
     protected fun idResources(@IdRes id: Int) = resources?.getResourceEntryName(id) ?: throw IllegalStateException("Resources not found")
 
     protected fun idResources(@IdRes id: Int, vararg formatArgs: Any?, separator: Char = '_'): String {
         val tag = resources?.getResourceEntryName(id) ?: throw IllegalStateException("Resources not found")
         return tag.plus(separator).plus(formatArgs.joinToString(separator = separator.toString()))
     }
+    @Composable
+    open fun rememberSnackbarHostState(): SnackbarHostState = remember { SnackbarHostState() }
 }

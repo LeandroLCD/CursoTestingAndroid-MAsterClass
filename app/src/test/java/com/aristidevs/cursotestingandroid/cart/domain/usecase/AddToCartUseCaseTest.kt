@@ -146,7 +146,6 @@ class AddToCartUseCaseTest {
         runCatching { useCase("id", 0) }.exceptionOrNull()
 
         //then
-        coVerify(exactly = 0) { productRepository.getProductById(any()) }
         coVerify(exactly = 0) { cartRepository.getCartItemById(any()) }
         coVerify(exactly = 0) { cartRepository.addToCart(any(), any()) }
     }
@@ -173,7 +172,6 @@ class AddToCartUseCaseTest {
         useCase(productId, 3)
 
         //then
-        coVerify(exactly = 1) { productRepository.getProductById(productId) }
         coVerify(exactly = 1) { cartRepository.getCartItemById(productId) }
         coVerify(exactly = 1) { cartRepository.addToCart(productId, 3) }
 

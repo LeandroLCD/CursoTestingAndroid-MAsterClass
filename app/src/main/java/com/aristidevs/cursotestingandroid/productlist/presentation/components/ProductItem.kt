@@ -22,18 +22,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.aristidevs.cursotestingandroid.R
-import com.aristidevs.cursotestingandroid.productlist.domain.model.Product
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductPromotion
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductWithPromotion
 import com.aristidevs.cursotestingandroid.ui.utils.testTagRes
-import java.util.Locale
-import androidx.compose.ui.platform.LocalLocale
 
 @Composable
 fun ProductItem(item: ProductWithPromotion, onClick: (ProductWithPromotion) -> Unit) {

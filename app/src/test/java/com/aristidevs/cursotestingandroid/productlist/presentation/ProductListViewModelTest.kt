@@ -3,7 +3,7 @@ package com.aristidevs.cursotestingandroid.productlist.presentation
 import app.cash.turbine.test
 import com.aristidevs.cursotestingandroid.cart.domain.usecase.GetCartItemCountUseCase
 import com.aristidevs.cursotestingandroid.core.MainDispatcherRule
-import com.aristidevs.cursotestingandroid.core.builders.product
+import com.aristidevs.cursotestingandroid.core.builder.product
 import com.aristidevs.cursotestingandroid.core.fakes.FakeCartItemRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakeProductRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakePromotionRepository

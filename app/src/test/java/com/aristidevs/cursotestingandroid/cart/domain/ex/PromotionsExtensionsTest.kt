@@ -1,6 +1,6 @@
 package com.aristidevs.cursotestingandroid.cart.domain.ex
 
-import com.aristidevs.cursotestingandroid.core.builders.promotion
+import com.aristidevs.cursotestingandroid.core.builder.promotion
 import com.aristidevs.cursotestingandroid.productlist.domain.model.Promotion
 import org.junit.Assert.*
 import org.junit.Test

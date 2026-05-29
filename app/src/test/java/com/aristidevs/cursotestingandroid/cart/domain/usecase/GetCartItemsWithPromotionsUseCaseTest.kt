@@ -1,8 +1,8 @@
 package com.aristidevs.cursotestingandroid.cart.domain.usecase
 
-import com.aristidevs.cursotestingandroid.core.builders.cartItem
-import com.aristidevs.cursotestingandroid.core.builders.product
-import com.aristidevs.cursotestingandroid.core.builders.promotion
+import com.aristidevs.cursotestingandroid.core.builder.cartItem
+import com.aristidevs.cursotestingandroid.core.builder.product
+import com.aristidevs.cursotestingandroid.core.builder.promotion
 import com.aristidevs.cursotestingandroid.core.fakes.FakeCartItemRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakeProductRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakePromotionRepository

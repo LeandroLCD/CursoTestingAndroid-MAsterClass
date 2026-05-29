@@ -1,7 +1,7 @@
 package com.aristidevs.cursotestingandroid.productlist.domain.usecase
 
-import com.aristidevs.cursotestingandroid.core.builders.product
-import com.aristidevs.cursotestingandroid.core.builders.promotion
+import com.aristidevs.cursotestingandroid.core.builder.product
+import com.aristidevs.cursotestingandroid.core.builder.promotion
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductPromotion
 import com.aristidevs.cursotestingandroid.productlist.domain.model.PromotionType
 import org.junit.Assert.*

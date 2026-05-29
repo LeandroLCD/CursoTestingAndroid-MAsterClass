@@ -6,8 +6,8 @@ import com.aristidevs.cursotestingandroid.cart.domain.usecase.GetCartItemsWithPr
 import com.aristidevs.cursotestingandroid.cart.domain.usecase.GetCartSummaryUseCase
 import com.aristidevs.cursotestingandroid.cart.domain.usecase.UpdateCartItemUseCase
 import com.aristidevs.cursotestingandroid.core.MainDispatcherRule
-import com.aristidevs.cursotestingandroid.core.builders.cartItem
-import com.aristidevs.cursotestingandroid.core.builders.product
+import com.aristidevs.cursotestingandroid.core.builder.cartItem
+import com.aristidevs.cursotestingandroid.core.builder.product
 import com.aristidevs.cursotestingandroid.core.domain.util.Clock
 import com.aristidevs.cursotestingandroid.core.fakes.FakeCartItemRepository
 import com.aristidevs.cursotestingandroid.core.fakes.FakeProductRepository

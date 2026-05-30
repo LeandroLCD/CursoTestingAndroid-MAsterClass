@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.testTag
 @Composable
 fun Modifier.testTagRes(@IdRes id: Int): Modifier {
     val tag = LocalResources.current.getResourceEntryName(id)
+    print("testTagRes: $tag")
     return testTag(tag)
 }
 
@@ -27,5 +28,7 @@ fun Modifier.testTagRes(@IdRes id: Int): Modifier {
 @Composable
 fun Modifier.testTagRes(@IdRes id: Int, vararg formatArgs: Any?, separator: Char = '_'): Modifier {
     val tag = LocalResources.current.getResourceEntryName(id)
-    return testTag(tag.plus(separator).plus(formatArgs.joinToString(separator = separator.toString())))
+    val tagWithArgs = tag.plus(separator).plus(formatArgs.joinToString(separator = separator.toString()))
+    print("testTagRes: $tagWithArgs")
+    return testTag(tagWithArgs)
 }

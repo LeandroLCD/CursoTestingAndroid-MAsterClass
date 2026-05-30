@@ -28,7 +28,9 @@ abstract class BaseComposeTest {
 
     protected fun idResources(@IdRes id: Int, vararg formatArgs: Any?, separator: Char = '_'): String {
         val tag = resources?.getResourceEntryName(id) ?: throw IllegalStateException("Resources not found")
-        return tag.plus(separator).plus(formatArgs.joinToString(separator = separator.toString()))
+        val tagWithArgs = tag.plus(separator).plus(formatArgs.joinToString(separator = separator.toString()))
+        print("testTagRes in BaseComposeTest: $tagWithArgs")
+        return tagWithArgs
     }
     @Composable
     open fun rememberSnackbarHostState(): SnackbarHostState = remember { SnackbarHostState() }

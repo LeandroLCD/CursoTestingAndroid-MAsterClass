@@ -35,4 +35,16 @@
     <string name="sort_price_desc">Precio ↓</string>
     <string name="sort_discount">Descuento</string>
     <string name="cart_iten_count_max" translatable="false">99+</string>
+    <string name="car">Carrito</string>
+    <string name="back">Volver</string>
+    <string name="car_is_empty">Tu carrito está vacío</string>
+    <string name="add_product">Agrega productos para comenzar</string>
+    <string name="car_icon">🛒</string>
+    <string name="error_with_msj">Error: %1$s</string>
+    <string name="discount">Descuento</string>
+    <string name="resume_car">Resumen del carrito</string>
+    <string name="sub_total">Subtotal</string>
+    <string name="total_with_amount">Total: %1$s</string>
+    <string name="c_u">%1$s c/u</string>
+    <string name="total">Total</string>
 </resources>

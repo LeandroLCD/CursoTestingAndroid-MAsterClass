@@ -14,4 +14,14 @@
     <item name="top_app_bar_filter_button" type="id" />
     <item name="top_app_bar_settings_button" type="id" />
     <item name="top_app_bar_cart_button" type="id" />
+    <item name="cart_list_lasy" type="id" />
+    <item name="cart_item_card" type="id" />
+    <item name="cart_summary" type="id" />
+    <item name="cart_loading" type="id" />
+    <item name="cart_error_button" type="id" />
+    <item name="cart_state_error_content" type="id" />
+    <item name="cart_quantity_selector_item" type="id" />
+    <item name="quantity_selector_decrease" type="id" />
+    <item name="quantity_selector_increase" type="id" />
+    <item name="cart_discount_row" type="id" />
 </resources>

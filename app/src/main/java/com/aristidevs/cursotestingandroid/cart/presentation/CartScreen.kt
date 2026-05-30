@@ -42,17 +42,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.aristidevs.cursotestingandroid.R
 import com.aristidevs.cursotestingandroid.cart.domain.model.CartSummary
 import com.aristidevs.cursotestingandroid.cart.presentation.model.CartItemWithPromotion
 import com.aristidevs.cursotestingandroid.core.presentation.components.MarketTopAppBar
 import com.aristidevs.cursotestingandroid.core.presentation.components.QuantitySelector
 import com.aristidevs.cursotestingandroid.productlist.domain.model.ProductPromotion
+import com.aristidevs.cursotestingandroid.ui.utils.testTagRes
 import java.text.NumberFormat
 import java.util.Currency.getInstance
 
@@ -72,14 +75,34 @@ fun CartScreen(
         }
     }
 
+    CartScreenContent(
+        snackbarHostState = snackbarHostState,
+        state = uiState,
+        onBack = onBack,
+        onIncreaseQuantity = cartViewModel::increaseQuantity,
+        onDecreaseQuantity = cartViewModel::decreaseQuantity,
+        onRemove = cartViewModel::removeFromCart
+    )
+}
+
+@Composable
+fun CartScreenContent(
+    state: CartUiState,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    onBack: () -> Unit = {},
+    onIncreaseQuantity: (String, Int) -> Unit = {_,_-> },
+    onDecreaseQuantity: (String, Int) -> Unit = {_,_-> },
+    onRemove: (String) -> Unit = {}
+) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = { MarketTopAppBar(title = "Carrito") { onBack() } }) { paddingValues ->
-        when (val state = uiState) {
+        topBar = { MarketTopAppBar(title = stringResource(R.string.car)) { onBack() } }) { paddingValues ->
+        when (state) {
             CartUiState.Loading -> {
                 CartLoadingStateScreen(
                     Modifier
                         .fillMaxSize()
+                        .testTagRes(R.id.cart_loading)
                         .padding(paddingValues)
                 )
             }
@@ -90,7 +113,7 @@ fun CartScreen(
                         .fillMaxSize()
                         .padding(paddingValues),
                     state,
-                ){
+                ) {
                     onBack.invoke()
                 }
             }
@@ -101,13 +124,10 @@ fun CartScreen(
                         .fillMaxSize()
                         .padding(paddingValues),
                     state = state,
-                    onIncreaseQuantity = { productId, quantity ->
-                        cartViewModel.increaseQuantity(productId, quantity)
-                    },
-                    onDecreaseQuantity = { productId, quantity ->
-                        cartViewModel.decreaseQuantity(productId, quantity)
-                    },
-                    onRemove = { id -> cartViewModel.removeFromCart(id) })
+                    onIncreaseQuantity = onIncreaseQuantity,
+                    onDecreaseQuantity = onDecreaseQuantity,
+                    onRemove = onRemove
+                )
             }
         }
     }
@@ -118,18 +138,22 @@ fun CartErrorStateScreen(
     modifier: Modifier = Modifier, state: CartUiState.Error, onBackStack: () -> Unit
 ) {
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier
+            .testTagRes(R.id.cart_state_error_content)
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            "Error: ${state.message}",
+            stringResource(R.string.error_with_msj, state.message),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.error
         )
         Spacer(Modifier.height(16.dp))
-        Button(onClick = { onBackStack.invoke() }) {
-            Text("Volver")
+        Button(
+            modifier = Modifier.testTagRes(R.id.cart_error_button),
+            onClick = { onBackStack.invoke() }) {
+            Text(stringResource(R.string.back))
         }
     }
 }
@@ -166,29 +190,32 @@ fun CartSuccessStateScreen(
                 ) {
                     Spacer(Modifier.height(54.dp))
                     Text(
-                        "🛒", style = MaterialTheme.typography.displayLarge
+                        stringResource(R.string.car_icon), style = MaterialTheme.typography.displayLarge
                     )
                     Text(
-                        "Tu carrito está vacío",
+                        stringResource(R.string.car_is_empty),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.secondary,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        "Agrega productos para comenzar",
+                        stringResource(R.string.add_product),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             } else {
                 LazyColumn(
-                    Modifier.weight(1f),
+                    Modifier
+                        .weight(1f)
+                        .testTagRes(R.id.cart_list_lasy),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(state.cartItems, key = { it.cartItem.productId }) { itemWithProduct ->
                         CartItemCard(
-                            modifier = Modifier.animateItem(),
+                            modifier = Modifier
+                                 .animateItem(),
                             itemWithProduct = itemWithProduct,
                             currencyFormatter = currencyFormatter,
                             onIncreaseQuantity = { productId, quantity ->
@@ -222,7 +249,8 @@ fun CartSuccessStateScreen(
 @Composable
 fun CartSummaryCard(modifier: Modifier, summary: CartSummary, currencyFormatter: NumberFormat) {
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .testTagRes(R.id.cart_summary),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -234,7 +262,7 @@ fun CartSummaryCard(modifier: Modifier, summary: CartSummary, currencyFormatter:
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                "Resumen del carrito",
+                stringResource(R.string.resume_car),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontWeight = FontWeight.Bold
@@ -245,7 +273,7 @@ fun CartSummaryCard(modifier: Modifier, summary: CartSummary, currencyFormatter:
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "Subtotal",
+                    stringResource(R.string.sub_total),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
@@ -255,13 +283,13 @@ fun CartSummaryCard(modifier: Modifier, summary: CartSummary, currencyFormatter:
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
-            if(summary.discountTotal > 0){
+            if (summary.discountTotal > 0) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTagRes(R.id.cart_discount_row),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "Descuento",
+                        stringResource(R.string.discount),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.error,
                     )
@@ -283,7 +311,7 @@ fun CartSummaryCard(modifier: Modifier, summary: CartSummary, currencyFormatter:
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "Total",
+                    stringResource(R.string.total),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontWeight = FontWeight.Bold
@@ -332,7 +360,7 @@ fun CartItemCard(
     }
 
     SwipeToDismissBox(
-        modifier = modifier,
+        modifier = modifier.testTagRes(R.id.cart_item_card, cartItem.productId),
         state = dismissState,
         enableDismissFromEndToStart = false,
         backgroundContent = {
@@ -395,14 +423,20 @@ fun CartItemCard(
                             )
 
                             Text(
-                                text = "${currencyFormatter.format(unitPrice)} c/u",
+                                text = stringResource(
+                                    R.string.c_u,
+                                    currencyFormatter.format(unitPrice)
+                                ),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.Bold
                             )
                         } else {
                             Text(
-                                text = "${currencyFormatter.format(unitPrice)} c/u",
+                                text = stringResource(
+                                    R.string.c_u,
+                                    currencyFormatter.format(unitPrice)
+                                ),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -411,17 +445,19 @@ fun CartItemCard(
 
 
                     Text(
-                        "Total: ${currencyFormatter.format(itemTotal)}",
+                        stringResource(
+                            R.string.total_with_amount,
+                            currencyFormatter.format(itemTotal)
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary
                     )
                     QuantitySelector(
-                        modifier = Modifier.background(
+                        cartItem = cartItem,
+                        modifier = Modifier.testTagRes(R.id.cart_quantity_selector_item, cartItem.productId).background(
                             MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp)
                         ),
-                        quantity = cartItem.quantity.toString(),
-                        canDecrease = cartItem.quantity > 1,
-                        canIncrease = cartItem.quantity < product.stock,
+                        stock = product.stock,
                         onDecreaseSelected = { onDecreaseQuantity(product.id, cartItem.quantity) },
                         onIncreaseSelected = { onIncreaseQuantity(product.id, cartItem.quantity) },
                     )

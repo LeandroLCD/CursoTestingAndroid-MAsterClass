@@ -19,16 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.aristidevs.cursotestingandroid.R
+import com.aristidevs.cursotestingandroid.cart.domain.model.CartItem
+import com.aristidevs.cursotestingandroid.ui.utils.testTagRes
 
 @Composable
 fun QuantitySelector(
+    cartItem: CartItem,
     modifier: Modifier = Modifier,
-    quantity: String,
-    canDecrease: Boolean,
-    canIncrease: Boolean,
+    stock: Int,
     onDecreaseSelected: () -> Unit,
-    onIncreaseSelected: () -> Unit
-) {
+    onIncreaseSelected: () -> Unit,
+
+    ) {
     Row(
         modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -36,8 +39,10 @@ fun QuantitySelector(
 
         IconButton(
             onClick = { onDecreaseSelected() },
-            modifier = Modifier.size(36.dp),
-            enabled = canDecrease
+            modifier = Modifier
+                .size(36.dp)
+                .testTagRes(R.id.quantity_selector_decrease, cartItem.productId),
+            enabled = cartItem.quantity > 1
         ) {
             Icon(Icons.Default.Remove, contentDescription = null, modifier.size(20.dp))
         }
@@ -48,7 +53,7 @@ fun QuantitySelector(
         ) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 Text(
-                    text = quantity,
+                    text = cartItem.quantity.toString(),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -56,8 +61,10 @@ fun QuantitySelector(
         }
         IconButton(
             onClick = { onIncreaseSelected() },
-            modifier = Modifier.size(36.dp),
-            enabled = canIncrease
+            modifier = Modifier
+                .size(36.dp)
+                .testTagRes(R.id.quantity_selector_increase, cartItem.productId),
+            enabled = cartItem.quantity < stock
         ) {
             Icon(Icons.Default.Add, contentDescription = null, modifier.size(20.dp))
         }

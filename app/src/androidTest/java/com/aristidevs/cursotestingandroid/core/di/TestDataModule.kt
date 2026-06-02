@@ -62,6 +62,7 @@ object TestDataModule {
     fun providesPromotionDao(database: MiniMarketDatabase): PromotionDao{
         return database.promotionDao()
     }
+
     @Provides
     fun providesCartItemDao(database: MiniMarketDatabase): CartItemDao{
         return database.cartItemDao()

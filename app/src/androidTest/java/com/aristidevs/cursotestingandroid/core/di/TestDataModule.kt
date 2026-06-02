@@ -34,6 +34,7 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(components = [SingletonComponent::class], replaces = [DataModule::class])
 object TestDataModule {
+
     @Provides
     @Singleton
     fun provideDispatchersProvider(defaultDispatchersProvider: DefaultDispatchersProvider): DispatchersProvider {
